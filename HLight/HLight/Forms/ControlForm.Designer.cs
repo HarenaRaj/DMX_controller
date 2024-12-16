@@ -42,6 +42,8 @@
             // 
             // EnvironmentPanel
             // 
+            this.EnvironmentPanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.EnvironmentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.EnvironmentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EnvironmentPanel.Location = new System.Drawing.Point(149, 60);
             this.EnvironmentPanel.Name = "EnvironmentPanel";
@@ -56,6 +58,7 @@
             this.Controls.Add(this.EnvironmentPanel);
             this.Controls.Add(this.LedPanel);
             this.Name = "ControlForm";
+            this.Theme = MetroFramework.MetroThemeStyle.Default;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
 

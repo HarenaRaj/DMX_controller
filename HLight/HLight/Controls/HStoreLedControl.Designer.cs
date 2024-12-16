@@ -2,7 +2,7 @@
 
 namespace HLight
 {
-    partial class HLedControl
+    partial class HStoreLedControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -30,34 +30,13 @@ namespace HLight
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.ChannelLabel = new MetroFramework.Controls.MetroLabel();
             this.NameLabel = new MetroFramework.Controls.MetroLabel();
             this.LebBox = new System.Windows.Forms.PictureBox();
-            this.ledColorBox = new System.Windows.Forms.PictureBox();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.LebBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ledColorBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // ChannelLabel
-            // 
-            this.ChannelLabel.BackColor = System.Drawing.Color.Transparent;
-            this.ChannelLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ChannelLabel.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.ChannelLabel.Location = new System.Drawing.Point(0, 0);
-            this.ChannelLabel.Name = "ChannelLabel";
-            this.ChannelLabel.Size = new System.Drawing.Size(133, 19);
-            this.ChannelLabel.TabIndex = 0;
-            this.ChannelLabel.Text = "1 - 16";
-            this.ChannelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ChannelLabel.UseCustomBackColor = true;
-            this.ChannelLabel.UseCustomForeColor = true;
-            this.ChannelLabel.UseStyleColors = true;
             // 
             // NameLabel
             // 
-            this.NameLabel.BackColor = System.Drawing.Color.Transparent;
             this.NameLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.NameLabel.FontSize = MetroFramework.MetroLabelSize.Small;
             this.NameLabel.Location = new System.Drawing.Point(0, 138);
@@ -66,58 +45,36 @@ namespace HLight
             this.NameLabel.TabIndex = 2;
             this.NameLabel.Text = "Par Led (1)";
             this.NameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.NameLabel.UseCustomBackColor = true;
-            this.NameLabel.UseCustomForeColor = true;
-            this.NameLabel.UseStyleColors = true;
             this.NameLabel.WrapToLine = true;
             // 
             // LebBox
             // 
-            this.LebBox.BackColor = System.Drawing.Color.Transparent;
             this.LebBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.LebBox.Enabled = false;
-            this.LebBox.Location = new System.Drawing.Point(0, 19);
+            this.LebBox.Location = new System.Drawing.Point(0, 0);
             this.LebBox.Name = "LebBox";
-            this.LebBox.Size = new System.Drawing.Size(133, 120);
+            this.LebBox.Size = new System.Drawing.Size(133, 135);
             this.LebBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.LebBox.TabIndex = 3;
             this.LebBox.TabStop = false;
+            this.LebBox.Click += new System.EventHandler(this.LebBox_Click);
             // 
-            // ledColorBox
-            // 
-            this.ledColorBox.BackColor = System.Drawing.Color.Transparent;
-            this.ledColorBox.Location = new System.Drawing.Point(86, 22);
-            this.ledColorBox.Name = "ledColorBox";
-            this.ledColorBox.Size = new System.Drawing.Size(35, 35);
-            this.ledColorBox.TabIndex = 4;
-            this.ledColorBox.TabStop = false;
-            // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // HLedControl
+            // HStoreLedControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.ledColorBox);
             this.Controls.Add(this.LebBox);
             this.Controls.Add(this.NameLabel);
-            this.Controls.Add(this.ChannelLabel);
-            this.Name = "HLedControl";
+            this.Name = "HStoreLedControl";
             this.Size = new System.Drawing.Size(133, 184);
             ((System.ComponentModel.ISupportInitialize)(this.LebBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ledColorBox)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        public MetroFramework.Controls.MetroLabel ChannelLabel;
         public MetroFramework.Controls.MetroLabel NameLabel;
         public PictureBox LebBox;
-        private PictureBox ledColorBox;
-        private Timer timer;
     }
 }

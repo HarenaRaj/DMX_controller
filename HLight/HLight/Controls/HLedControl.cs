@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using System.Drawing;
 using HLight.Models;
+using System;
+using System.Linq;
 
 namespace HLight
 {
@@ -16,35 +18,70 @@ namespace HLight
                 _led = value;
             }
         }
-        private Led _led;
 
-        public bool ShowChannel { get; set; }
+        public bool IsSelected { get; set; }
+
+        public int R { get; set; }
+        public int G { get; set; }
+        public int B { get; set; }
+
+
+        private Led _led;
 
 
         public HLedControl()
         {
             InitializeComponent();
+            timer.Start();
         }
 
         public HLedControl(Led led) : this() 
         {
             this.Led = led;
-            this.lebBox.Image = setImageByType(this.Led.Type);
+            this.LebBox.Image = setImageByType(this.Led.StoreLed.Type);
             this.NameLabel.Text = led.Name;
+            ChangeChannel(1);
         }
 
-        public HLedControl(Led led, bool showChannel) : this(led)
+        public void ChangeName(string newName)
         {
-            this.ShowChannel = showChannel;
-            if (showChannel)
+            this.NameLabel.Text = newName;
+            this.Led.Name = newName;
+        }
+
+        public void ChangeChannel(int channel)
+        {
+            this.ChannelLabel.Text = $"{channel.ToString()} - {channel + this.Led.StoreLed.NumberChannel - 1}";
+            this.Led.ChannelBegin = channel;
+        }
+
+        public void SetSelected(bool isSelected)
+        {
+            this.IsSelected = isSelected;
+            if (isSelected)
             {
-                this.ChannelLabel.Show();
-                this.lebBox.Enabled = true;
+                this.BackColor = Color.FromArgb(255, 0, 174, 219);
             }
             else
             {
-                this.ChannelLabel.Hide();
+                this.BackColor = SystemColors.ControlLight;
             }
+        }
+
+        public void ChangeColor(int a, int r, int g, int b)
+        {
+            Bitmap bitmap = new Bitmap(20, 20);
+            ledColorBox.Image = bitmap;
+
+            using (Graphics graph = Graphics.FromImage(bitmap))
+            {
+                SolidBrush brush = new SolidBrush(Color.FromArgb(a, r, g, b));
+                int diameter = 20;
+
+                graph.FillEllipse(brush, 0, 0, diameter, diameter);
+            }
+
+            ledColorBox.Refresh();
         }
 
         private Image setImageByType(LedType type)
@@ -60,14 +97,13 @@ namespace HLight
             }
         }
 
-        private void lebBox_Click(object sender, System.EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
-            
-        }
-
-        private void ChannelLabel_Click(object sender, System.EventArgs e)
-        {
-
+            var d = Led.Channels.Where(x => x.Type == ChannelType.Dimmer).First().Value;
+            R = Led.Channels.Where(x => x.Type == ChannelType.Red).First().Value;
+            G = Led.Channels.Where(x => x.Type == ChannelType.Green).First().Value;
+            B = Led.Channels.Where(x => x.Type == ChannelType.Blue).First().Value;
+            ChangeColor(255, R * d / 255, G * d / 255, B * d / 255);
         }
     }
 }

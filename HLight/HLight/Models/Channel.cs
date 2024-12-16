@@ -7,5 +7,6 @@ namespace HLight.Models
         public int Id { get; set; }
         public ChannelType Type { get; set; }
         public int ChannelNumber { get; set; }
+        public int Value { get; set; } = 0;
     }
 }

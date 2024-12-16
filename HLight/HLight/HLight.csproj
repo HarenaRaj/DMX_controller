@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Control.Draggable, Version=1.0.5049.269, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Control.Draggable.1.0.5049.269\lib\net35-Client\Control.Draggable.dll</HintPath>
+    </Reference>
     <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
     </Reference>
@@ -55,6 +58,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HLedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HLedControl.Designer.cs">
+      <DependentUpon>HLedControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HTrackBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HTrackBar.Designer.cs">
+      <DependentUpon>HTrackBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums\LedType.cs" />
     <Compile Include="Enums\ChannelType.cs" />
     <Compile Include="Forms\ControlForm.cs">
@@ -63,21 +78,37 @@
     <Compile Include="Forms\ControlForm.Designer.cs">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HLedControl.cs">
+    <Compile Include="Controls\HStoreLedControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\HLedControl.Designer.cs">
-      <DependentUpon>HLedControl.cs</DependentUpon>
+    <Compile Include="Controls\HStoreLedControl.Designer.cs">
+      <DependentUpon>HStoreLedControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HChannelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HChannelControl.Designer.cs">
+      <DependentUpon>HChannelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Led.cs" />
     <Compile Include="Models\Channel.cs" />
-    <Compile Include="Models\Leds.cs" />
+    <Compile Include="Models\StoreLed.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\HLedControl.resx">
+      <DependentUpon>HLedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HTrackBar.resx">
+      <DependentUpon>HTrackBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\HLedControl.resx">
-      <DependentUpon>HLedControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\HStoreLedControl.resx">
+      <DependentUpon>HStoreLedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HChannelControl.resx">
+      <DependentUpon>HChannelControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

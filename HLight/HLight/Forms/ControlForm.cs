@@ -1,5 +1,7 @@
 ﻿using HLight.Enums;
+using HLight.Forms;
 using HLight.Models;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,11 +11,12 @@ namespace HLight
 {
     public partial class ControlForm : MetroFramework.Forms.MetroForm
     {
-        private List<Led> Leds = new List<Led>()
+        private HChannelControl _ledControlForm;
+
+        private List<StoreLed> _storeLeds = new List<StoreLed>()
         {
-            new Led() {
+            new StoreLed() {
                 Id = 1,
-                ChannelBegin = 1,
                 Name = "Par Led LPC007H",
                 NumberChannel = 7,
                 Type = LedType.LPC007H,
@@ -28,9 +31,8 @@ namespace HLight
                     new Channel() {Id = 7, ChannelNumber = 7, Type = ChannelType.Speed},
                 }
             },
-            new Led() {
+            new StoreLed() {
                 Id = 2,
-                ChannelBegin = 1,
                 Name = "Par Led LPC007",
                 NumberChannel = 7,
                 Type = LedType.LPC007,
@@ -46,12 +48,18 @@ namespace HLight
                 }
             }
         };
+
+        private List<HLedControl> _ledControls = new List<HLedControl>();
+
+        private List<HLedControl> _selectedLedControls = new List<HLedControl>();
+
+        private bool _ctrlPressed;
         public ControlForm()
         {
             InitializeComponent();
-            foreach (var led in Leds)
+            foreach (var led in _storeLeds)
             {
-                var lebBox = new HLedControl(led, false);
+                var lebBox = new HStoreLedControl(led);
                 lebBox.Name = led.Name;
                 lebBox.Size = new Size(80, 120);
                 lebBox.Cursor = Cursors.Hand;
@@ -62,22 +70,85 @@ namespace HLight
 
         private void ledBox_Click(object sender, System.EventArgs e)
         {
-            var ledControl = (HLedControl) sender;
+            var ledControl = (HStoreLedControl) sender;
             var controlCount = this.EnvironmentPanel.Controls.Count;
-            var existLedControls = this.EnvironmentPanel.Controls.OfType<HLedControl>().Where(x => x.Led.Type == ledControl.Led.Type);
+            var existLedControls = this.EnvironmentPanel.Controls.OfType<HLedControl>().Where(x => x.Led.StoreLed.Type == ledControl.Led.Type);
             var newLed = new Led()
             {
-                ChannelBegin = ledControl.Led.ChannelBegin,
+                Id = Guid.NewGuid(),
+                ChannelBegin = 1,
                 Name = $"{ledControl.Led.Name} {existLedControls.Count() + 1}",
-                NumberChannel = ledControl.Led.NumberChannel,
-                Type = ledControl.Led.Type,
-                Channels = ledControl.Led.Channels
+                StoreLed = ledControl.Led,
+                Channels = new List<Channel>()
             };
 
-            var newLedControl = new HLedControl(newLed, true);
+            foreach (var channel in ledControl.Led.Channels)
+            {
+                var newChannel = new Channel()
+                {
+                    ChannelNumber = channel.ChannelNumber,
+                    Value = channel.Type == ChannelType.Dimmer ? 255 : channel.Value,
+                    Type = channel.Type
+                };
+                newLed.Channels.Add(newChannel);
+            }
+
+            var newLedControl = new HLedControl(newLed);
             newLedControl.Size = new Size(80, 120);
+            newLedControl.Cursor = Cursors.Hand;
             newLedControl.Location = new Point(newLedControl.Size.Width * controlCount);
+            newLedControl.Click += new System.EventHandler(this.ledControl_Click);
+            newLedControl.KeyDown += NewLedControl_KeyDown;
+            newLedControl.KeyUp += NewLedControl_KeyUp;
+            ControlExtension.Draggable(newLedControl, true);
+            _ledControls.Add(newLedControl);
             this.EnvironmentPanel.Controls.Add(newLedControl);
+        }
+
+        private void NewLedControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            _ctrlPressed = false;
+        }
+
+        private void NewLedControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control)
+            {
+                _ctrlPressed = true;
+            }
+        }
+
+        private void ledControl_Click(object sender, System.EventArgs e)
+        {
+            var ledControl = (HLedControl)sender;
+            var currentLed = _ledControls.Where(x => x.Led.Id == ledControl.Led.Id).FirstOrDefault();
+            currentLed.SetSelected(!currentLed.IsSelected);
+            if (!_ctrlPressed)
+            {
+                this.unselectOtherLeds(currentLed);
+            }
+            _selectedLedControls = _ledControls.Where(x => x.IsSelected).ToList();
+            if (_ledControlForm == null || _ledControlForm.IsDisposed)
+            {
+                _ledControlForm = new HChannelControl(_ledControls, _selectedLedControls);
+            }
+            else
+            {
+                _ledControlForm.Init(_ledControls, _selectedLedControls);
+            }
+            _ledControlForm.Dock = DockStyle.Bottom;
+            EnvironmentPanel.Controls.Add(_ledControlForm);
+        }
+
+        private void unselectOtherLeds(HLedControl currentLed)
+        {
+            foreach (var ledControl in _ledControls)
+            {
+                if (ledControl.Led.Id != currentLed.Led.Id)
+                {
+                    ledControl.SetSelected(false);
+                }
+            }
         }
     }
 }
