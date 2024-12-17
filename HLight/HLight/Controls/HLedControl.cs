@@ -4,31 +4,20 @@ using System.Drawing;
 using HLight.Models;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace HLight
 {
     public partial class HLedControl : UserControl
     {
-        public Led Led {
-            get
-            {
-                return _led;
-            }
-            set {
-                _led = value;
-            }
-        }
+        public Led Led { get; set; }
+        public Led OutputLed { get; set; }
 
         public bool IsSelected { get; set; }
-        public int R { get; set; }
-        public int G { get; set; }
-        public int B { get; set; }
 
         private int _tempR = 0;
         private int _tempG = 0;
         private int _tempB = 0;
-
-        private Led _led;
 
 
         public HLedControl()
@@ -41,6 +30,22 @@ namespace HLight
         public HLedControl(Led led) : this() 
         {
             this.Led = led;
+            this.OutputLed = new Led()
+            {
+                ChannelBegin = led.ChannelBegin,
+                Channels = new List<Channel>(),
+                StoreLed = led.StoreLed,
+            };
+            foreach (Channel channel in led.Channels)
+            {
+                var newChannel = new Channel()
+                {
+                    ChannelNumber = channel.ChannelNumber,
+                    Type = channel.Type,
+                    Value = channel.Value
+                };
+                this.OutputLed.Channels.Add(newChannel);
+            }
             this.LebBox.Image = setImageByType(this.Led.StoreLed.Type);
             this.NameLabel.Text = led.Name;
             ChangeChannel(1);
@@ -113,17 +118,32 @@ namespace HLight
 
         private void timerFader_Tick(object sender, EventArgs e)
         {
-            var d = Led.Channels.Where(x => x.Type == ChannelType.Dimmer).First().Value;
+            var channelD = Led.Channels.Where(x => x.Type == ChannelType.Dimmer).First();
+            var channelR = OutputLed.Channels.Where(x => x.Type == ChannelType.Red).First();
+            var channelG = OutputLed.Channels.Where(x => x.Type == ChannelType.Green).First();
+            var channelB = OutputLed.Channels.Where(x => x.Type == ChannelType.Blue).First();
             if (TimerFader.Interval == 1)
             {
-                R = _tempR;
-                G = _tempG;
-                B = _tempB;
+                channelR.Value = _tempR;
+                channelG.Value = _tempG;
+                channelB.Value = _tempB;
             }
-            if (_tempR > R) R += 15; else if (_tempR == R) R = _tempR; else R -= 15;
-            if (_tempG > G) G += 15; else if (_tempG == G) G = _tempG; else G -= 15;
-            if (_tempB > B) B += 15; else if (_tempR == B) B = _tempB; else B -= 15;
-            ChangeColor(255, R * d / 255, G * d / 255, B * d / 255);
+
+            if (_tempR > channelR.Value) channelR.Value += 15; 
+            else if (_tempR == channelR.Value) channelR.Value = _tempR; 
+            else channelR.Value -= 15;
+
+            if (_tempG > channelG.Value) channelG.Value += 15; 
+            else if (_tempG == channelG.Value) channelG.Value = _tempG; 
+            else channelG.Value -= 15;
+
+            if (_tempB > channelB.Value) channelB.Value += 15; 
+            else if (_tempR == channelB.Value) channelB.Value = _tempB; 
+            else channelB.Value -= 15;
+
+            ChangeColor(255, channelR.Value * channelD.Value / 255, 
+                channelG.Value * channelD.Value / 255, 
+                channelB.Value * channelD.Value / 255);
         }
     }
 }

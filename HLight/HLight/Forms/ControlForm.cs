@@ -134,11 +134,11 @@ namespace HLight
             this.setSelectedGroups(_selectedLedControls);
             if (_channelControl == null || _channelControl.IsDisposed)
             {
-                _channelControl = new HChannelControl(_ledControls, _selectedLedControls, timerSpeed);
+                _channelControl = new HChannelControl(_ledControls, _selectedLedControls, _groupControls);
             }
             else
             {
-                _channelControl.Init(_ledControls, _selectedLedControls, timerSpeed);
+                _channelControl.Init(_ledControls, _selectedLedControls, _groupControls);
             }
             _channelControl.Dock = DockStyle.Bottom;
             EnvironmentPanel.Controls.Add(_channelControl);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace HLight.Models
 {
@@ -10,5 +6,6 @@ namespace HLight.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public List<List<Channel>> Channels { get; set; }
     }
 }

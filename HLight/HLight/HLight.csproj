@@ -155,5 +155,11 @@
   <ItemGroup>
     <None Include="Assets\Images\lpc007.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Images\Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Images\Play.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

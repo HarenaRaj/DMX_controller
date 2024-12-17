@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.LedPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.EnvironmentPanel = new System.Windows.Forms.Panel();
             this.GroupParentPanel = new System.Windows.Forms.Panel();
             this.AddGroupButton = new MetroFramework.Controls.MetroButton();
             this.GroupPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.timerSpeed = new System.Windows.Forms.Timer(this.components);
             this.EnvironmentPanel.SuspendLayout();
             this.GroupParentPanel.SuspendLayout();
             this.SuspendLayout();
@@ -87,8 +85,9 @@
             this.GroupPanel.AutoScroll = true;
             this.GroupPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GroupPanel.Location = new System.Drawing.Point(0, 0);
+            this.GroupPanel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 50);
             this.GroupPanel.Name = "GroupPanel";
-            this.GroupPanel.Padding = new System.Windows.Forms.Padding(0, 50, 0, 0);
+            this.GroupPanel.Padding = new System.Windows.Forms.Padding(0, 50, 0, 50);
             this.GroupPanel.Size = new System.Drawing.Size(700, 1038);
             this.GroupPanel.TabIndex = 1;
             // 
@@ -114,7 +113,6 @@
         private System.Windows.Forms.Panel GroupParentPanel;
         private MetroFramework.Controls.MetroButton AddGroupButton;
         private System.Windows.Forms.FlowLayoutPanel GroupPanel;
-        private System.Windows.Forms.Timer timerSpeed;
     }
 }
 

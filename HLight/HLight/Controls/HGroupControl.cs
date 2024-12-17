@@ -11,6 +11,11 @@ namespace HLight.Controls
         public List<HLedControl> SelectedLedControls { get; set; }
         public List<HLedControl> LedControls { get; set; }
         public Group Group { get; set; }
+
+        private bool _isPlay = false;
+        private int _iAuto = 0;
+
+        private Animation _pulseAnimation { get; set; }
         public HGroupControl()
         {
             InitializeComponent();
@@ -18,6 +23,7 @@ namespace HLight.Controls
             Group = new Group();
             Group.Leds = new List<Led>();
             Group.Scenes = new List<Scene>();
+            _pulseAnimation = new Animation();
         }
 
         public HGroupControl(List<HLedControl> selectedLedControls) : this()
@@ -50,6 +56,12 @@ namespace HLight.Controls
                         LedControls.Add(led);
                         Group.Leds.Add(led.Led);
                     }
+                }
+
+                _pulseAnimation.Channels = new List<List<Channel>> { new List<Channel>() };
+                for (int i = 0; i < LedControls.Count; i++)
+                {
+
                 }
             }
         }
@@ -95,11 +107,12 @@ namespace HLight.Controls
                     scene.Leds.Add(newLed);
                 }
                 var buttonScene = new HSceneButton();
+                buttonScene.Location = new System.Drawing.Point(((buttonScene.Width + 5) * SceneTabControl.SelectedTab.Controls.Count - 2), 0);
                 buttonScene.Name = scene.Name;
                 buttonScene.Text = scene.Name;
                 buttonScene.Click += ButtonScene_Click;
                 buttonScene.Scene = scene;
-                ScenePanel.Controls.Add(buttonScene);
+                SceneTabControl.SelectedTab.Controls.Add(buttonScene);
                 Group.Scenes.Add(scene);
             }
         }
@@ -126,6 +139,20 @@ namespace HLight.Controls
                     }
                 }
             }
+        }
+
+        private void PlayPauseButton_Click(object sender, EventArgs e)
+        {
+            _isPlay = !_isPlay;
+            if (_isPlay) TimerSpeed.Start();
+            else TimerSpeed.Stop();
+        }
+
+        private void TimerSpeed_Tick(object sender, EventArgs e)
+        {
+            if (_iAuto >= SceneTabControl.SelectedTab.Controls.Count) _iAuto = 0;
+            ButtonScene_Click(SceneTabControl.SelectedTab.Controls[_iAuto], e);
+            _iAuto++;
         }
     }
 }

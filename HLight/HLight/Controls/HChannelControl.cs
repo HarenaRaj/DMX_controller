@@ -11,12 +11,11 @@ namespace HLight.Forms
     {
         public List<HLedControl> LedControls { get; set; }
         public List<HLedControl> SelectedLedControls { get; set; }
+        public List<HGroupControl> GroupControls { get; set; }
 
         private List<HTrackBar> _channelBars;
 
         private HTrackBar _channelBar;
-
-        private Timer _timerSpeed;
 
         public HChannelControl()
         {
@@ -24,9 +23,11 @@ namespace HLight.Forms
             _channelBars = new List<HTrackBar>();
         }
 
-        public HChannelControl(List<HLedControl> ledControls, List<HLedControl> selectedLedControls, Timer timerSpeed) : this()
+        public HChannelControl(List<HLedControl> ledControls, 
+            List<HLedControl> selectedLedControls, 
+            List<HGroupControl> groupControls) : this()
         {
-            Init(ledControls, selectedLedControls, timerSpeed);
+            Init(ledControls, selectedLedControls, groupControls);
             HTrackBar channelMasterDimmerBar = new HTrackBar();
             channelMasterDimmerBar.Location = new System.Drawing.Point(25, 55);
             channelMasterDimmerBar.Name = ChannelType.MasterDimmer.ToString();
@@ -42,20 +43,20 @@ namespace HLight.Forms
             channelMasterSpeedBar.AutoSize = false;
             channelMasterSpeedBar.ChannelLabel.Text = ChanneTypeString.GetString(ChannelType.MasterSpeed);
             channelMasterSpeedBar.Type = ChannelType.MasterSpeed;
-            channelMasterSpeedBar.ChannelTrackBar.Value = 100;
-            channelMasterSpeedBar.ChannelTrackBar.Maximum = 10000;
+            channelMasterSpeedBar.ChannelTrackBar.Maximum = 5000;
             channelMasterSpeedBar.ChannelTrackBar.Minimum = 100;
+            channelMasterSpeedBar.ChannelTrackBar.Value = channelMasterSpeedBar.ChannelTrackBar.Maximum;
             channelMasterSpeedBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelMasterSpeedTrackBar_ValueChanged);
 
             HTrackBar channelFaderBar = new HTrackBar();
             channelFaderBar.Location = new System.Drawing.Point(185, 55);
             channelFaderBar.Name = ChannelType.Fader.ToString();
             channelFaderBar.AutoSize = false;
-            channelFaderBar.ChannelLabel.Text = ChanneTypeString.GetString(ChannelType.MasterDimmer);
+            channelFaderBar.ChannelLabel.Text = ChanneTypeString.GetString(ChannelType.Fader);
             channelFaderBar.Type = ChannelType.Fader;
-            channelFaderBar.ChannelTrackBar.Value = 100;
             channelFaderBar.ChannelTrackBar.Maximum = 100;
             channelFaderBar.ChannelTrackBar.Minimum = 1;
+            channelFaderBar.ChannelTrackBar.Value = channelFaderBar.ChannelTrackBar.Minimum;
             channelFaderBar.ChannelTrackBar.RightToLeft = RightToLeft.Yes;
             channelFaderBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelFaderTrackBar_ValueChanged);
 
@@ -69,20 +70,24 @@ namespace HLight.Forms
             var channel = (TrackBar)sender;
             foreach (var ledControl in LedControls)
             {
-                ledControl.TimerFader.Interval = Math.Abs(channel.Value - channel.Maximum - channel.Minimum);
+                ledControl.TimerFader.Interval = channel.Value;
             }
         }
 
         private void ChannelMasterSpeedTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var channel = (TrackBar)sender;
-            _timerSpeed.Interval = channel.Value;
+            foreach (var groupControl in GroupControls)
+            {
+                groupControl.TimerSpeed.Interval = Math.Abs(channel.Value - channel.Maximum - channel.Minimum);
+            }
         }
 
-        public void Init(List<HLedControl> ledControls, List<HLedControl> selectedLedControls, Timer timerSpeed)
+        public void Init(List<HLedControl> ledControls, List<HLedControl> selectedLedControls, List<HGroupControl> groupControls)
         {
             SelectedLedControls = selectedLedControls;
             LedControls = ledControls;
+            GroupControls = groupControls;
             if (selectedLedControls.Count == 1)
             {
                 ChannelNumeric.Text = selectedLedControls.First().Led.ChannelBegin.ToString();
