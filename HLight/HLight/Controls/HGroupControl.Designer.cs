@@ -235,7 +235,6 @@
         #endregion
 
         private MetroFramework.Controls.MetroLabel NameGroupLabel;
-        private MetroFramework.Controls.MetroTextBox NameGroupText;
         private MetroFramework.Controls.MetroLabel SceneLabel;
         private System.Windows.Forms.FlowLayoutPanel ScenePanel;
         private System.Windows.Forms.FlowLayoutPanel AnimationPanel;
@@ -247,5 +246,6 @@
         private MetroFramework.Controls.MetroTabPage LedTabPage;
         private MetroFramework.Controls.MetroTabPage SceneTabPage;
         private MetroFramework.Controls.MetroButton AddSceneButton;
+        public MetroFramework.Controls.MetroTextBox NameGroupText;
     }
 }

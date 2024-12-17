@@ -20,11 +20,13 @@ namespace HLight
         }
 
         public bool IsSelected { get; set; }
-
         public int R { get; set; }
         public int G { get; set; }
         public int B { get; set; }
 
+        private int _tempR = 0;
+        private int _tempG = 0;
+        private int _tempB = 0;
 
         private Led _led;
 
@@ -32,7 +34,8 @@ namespace HLight
         public HLedControl()
         {
             InitializeComponent();
-            timer.Start();
+            timerLed.Start();
+            TimerFader.Start();
         }
 
         public HLedControl(Led led) : this() 
@@ -73,6 +76,10 @@ namespace HLight
             Bitmap bitmap = new Bitmap(20, 20);
             ledColorBox.Image = bitmap;
 
+            r = r < 0 ? 0 : r > 255 ? 255 : r;
+            g = g < 0 ? 0 : g > 255 ? 255 : g;
+            b = b < 0 ? 0 : b > 255 ? 255 : b;
+
             using (Graphics graph = Graphics.FromImage(bitmap))
             {
                 SolidBrush brush = new SolidBrush(Color.FromArgb(a, r, g, b));
@@ -99,10 +106,23 @@ namespace HLight
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            _tempR = Led.Channels.Where(x => x.Type == ChannelType.Red).First().Value;
+            _tempG = Led.Channels.Where(x => x.Type == ChannelType.Green).First().Value;
+            _tempB = Led.Channels.Where(x => x.Type == ChannelType.Blue).First().Value;
+        }
+
+        private void timerFader_Tick(object sender, EventArgs e)
+        {
             var d = Led.Channels.Where(x => x.Type == ChannelType.Dimmer).First().Value;
-            R = Led.Channels.Where(x => x.Type == ChannelType.Red).First().Value;
-            G = Led.Channels.Where(x => x.Type == ChannelType.Green).First().Value;
-            B = Led.Channels.Where(x => x.Type == ChannelType.Blue).First().Value;
+            if (TimerFader.Interval == 1)
+            {
+                R = _tempR;
+                G = _tempG;
+                B = _tempB;
+            }
+            if (_tempR > R) R += 15; else if (_tempR == R) R = _tempR; else R -= 15;
+            if (_tempG > G) G += 15; else if (_tempG == G) G = _tempG; else G -= 15;
+            if (_tempB > B) B += 15; else if (_tempR == B) B = _tempB; else B -= 15;
             ChangeColor(255, R * d / 255, G * d / 255, B * d / 255);
         }
     }

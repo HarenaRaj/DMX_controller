@@ -35,7 +35,8 @@ namespace HLight
             this.NameLabel = new MetroFramework.Controls.MetroLabel();
             this.LebBox = new System.Windows.Forms.PictureBox();
             this.ledColorBox = new System.Windows.Forms.PictureBox();
-            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.timerLed = new System.Windows.Forms.Timer(this.components);
+            this.TimerFader = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.LebBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ledColorBox)).BeginInit();
             this.SuspendLayout();
@@ -92,9 +93,14 @@ namespace HLight
             this.ledColorBox.TabIndex = 4;
             this.ledColorBox.TabStop = false;
             // 
-            // timer
+            // timerLed
             // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            this.timerLed.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // TimerFader
+            // 
+            this.TimerFader.Interval = 1;
+            this.TimerFader.Tick += new System.EventHandler(this.timerFader_Tick);
             // 
             // HLedControl
             // 
@@ -118,6 +124,7 @@ namespace HLight
         public MetroFramework.Controls.MetroLabel NameLabel;
         public PictureBox LebBox;
         private PictureBox ledColorBox;
-        private Timer timer;
+        private Timer timerLed;
+        public Timer TimerFader;
     }
 }

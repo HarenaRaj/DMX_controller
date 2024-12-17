@@ -158,6 +158,7 @@ namespace HLight
         private void AddGroupButton_Click(object sender, EventArgs e)
         {
             var groupPanel = new HGroupControl(_selectedLedControls);
+            groupPanel.NameGroupText.Text = "Groupe " + (this._groupControls.Count + 1);
             this._groupControls.Add(groupPanel);
             this.GroupPanel.Controls.Add(groupPanel);
         }

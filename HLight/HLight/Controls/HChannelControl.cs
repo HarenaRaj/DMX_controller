@@ -37,31 +37,40 @@ namespace HLight.Forms
             channelMasterDimmerBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelMasterDimmerTrackBar_ValueChanged);
 
             HTrackBar channelMasterSpeedBar = new HTrackBar();
-            channelMasterSpeedBar.Location = new System.Drawing.Point(25, 55);
+            channelMasterSpeedBar.Location = new System.Drawing.Point(105, 55);
             channelMasterSpeedBar.Name = ChannelType.MasterDimmer.ToString();
             channelMasterSpeedBar.AutoSize = false;
             channelMasterSpeedBar.ChannelLabel.Text = ChanneTypeString.GetString(ChannelType.MasterSpeed);
             channelMasterSpeedBar.Type = ChannelType.MasterSpeed;
-            channelMasterSpeedBar.ChannelTrackBar.Value = 0;
-            channelMasterSpeedBar.ChannelTrackBar.Maximum = 25000;
+            channelMasterSpeedBar.ChannelTrackBar.Value = 100;
+            channelMasterSpeedBar.ChannelTrackBar.Maximum = 10000;
             channelMasterSpeedBar.ChannelTrackBar.Minimum = 100;
             channelMasterSpeedBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelMasterSpeedTrackBar_ValueChanged);
 
             HTrackBar channelFaderBar = new HTrackBar();
-            channelFaderBar.Location = new System.Drawing.Point(25, 55);
-            channelFaderBar.Name = ChannelType.MasterDimmer.ToString();
+            channelFaderBar.Location = new System.Drawing.Point(185, 55);
+            channelFaderBar.Name = ChannelType.Fader.ToString();
             channelFaderBar.AutoSize = false;
             channelFaderBar.ChannelLabel.Text = ChanneTypeString.GetString(ChannelType.MasterDimmer);
-            channelFaderBar.Type = ChannelType.MasterDimmer;
-            channelFaderBar.ChannelTrackBar.Value = 0;
+            channelFaderBar.Type = ChannelType.Fader;
+            channelFaderBar.ChannelTrackBar.Value = 100;
+            channelFaderBar.ChannelTrackBar.Maximum = 100;
+            channelFaderBar.ChannelTrackBar.Minimum = 1;
+            channelFaderBar.ChannelTrackBar.RightToLeft = RightToLeft.Yes;
             channelFaderBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelFaderTrackBar_ValueChanged);
 
             this.Controls.Add(channelMasterDimmerBar);
+            this.Controls.Add(channelMasterSpeedBar);
+            this.Controls.Add(channelFaderBar);
         }
 
         private void ChannelFaderTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var channel = (TrackBar)sender;
+            foreach (var ledControl in LedControls)
+            {
+                ledControl.TimerFader.Interval = Math.Abs(channel.Value - channel.Maximum - channel.Minimum);
+            }
         }
 
         private void ChannelMasterSpeedTrackBar_ValueChanged(object sender, EventArgs e)
@@ -90,7 +99,7 @@ namespace HLight.Forms
                         _channelBar = new HTrackBar();
                     }
 
-                    _channelBar.Location = new System.Drawing.Point(150 + (80 * i), 55);
+                    _channelBar.Location = new System.Drawing.Point(310 + (80 * i), 55);
                     _channelBar.Name = SelectedLedControls.Last().Led.Channels[i].Type.ToString();
                     _channelBar.AutoSize = false;
                     _channelBar.ChannelLabel.Text = ChanneTypeString.GetString(SelectedLedControls.Last().Led.StoreLed.Channels[i].Type);
