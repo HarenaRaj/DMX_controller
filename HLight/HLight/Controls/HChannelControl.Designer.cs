@@ -95,17 +95,18 @@
             this.NameLabel.TabIndex = 2;
             this.NameLabel.Text = "Nom :";
             // 
-            // LedControlForm
+            // HChannelControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.ChannelLabel);
             this.Controls.Add(this.ChannelNumeric);
             this.Controls.Add(this.NameText);
-            this.Name = "LedControlForm";
-            this.Size = new System.Drawing.Size(1071, 462);
+            this.Name = "HChannelControl";
+            this.Size = new System.Drawing.Size(1067, 458);
             ((System.ComponentModel.ISupportInitialize)(this.ChannelNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

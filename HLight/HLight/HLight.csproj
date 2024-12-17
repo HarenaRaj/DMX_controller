@@ -58,11 +58,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HGroupControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HGroupControl.Designer.cs">
+      <DependentUpon>HGroupControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HLedControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\HLedControl.Designer.cs">
       <DependentUpon>HLedControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HSceneButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\HTrackBar.cs">
       <SubType>UserControl</SubType>
@@ -90,11 +99,17 @@
     <Compile Include="Controls\HChannelControl.Designer.cs">
       <DependentUpon>HChannelControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Animation.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Led.cs" />
     <Compile Include="Models\Channel.cs" />
+    <Compile Include="Models\Scene.cs" />
     <Compile Include="Models\StoreLed.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\HGroupControl.resx">
+      <DependentUpon>HGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\HLedControl.resx">
       <DependentUpon>HLedControl.cs</DependentUpon>
     </EmbeddedResource>

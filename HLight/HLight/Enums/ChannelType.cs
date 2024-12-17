@@ -3,13 +3,15 @@
     public enum ChannelType
     {
         MasterDimmer = 0,
-        Dimmer = 1,
-        Red = 2,
-        Green = 3,
-        Blue = 4,
-        Strobe = 5,
-        SetProgram = 6,
-        Speed = 7
+        MasterSpeed = 1,
+        Fader = 2,
+        Dimmer = 3,
+        Red = 4,
+        Green = 5,
+        Blue = 6,
+        Strobe = 7,
+        SetProgram = 8,
+        Speed = 9
     }
 
     public static class ChanneTypeString
@@ -20,6 +22,10 @@
             {
                 case ChannelType.MasterDimmer:
                     return "Dimmer Mètre";
+                case ChannelType.MasterSpeed:
+                    return "Vitesse Mètre";
+                case ChannelType.Fader:
+                    return "Fader";
                 case ChannelType.Dimmer:
                     return "Dimmer";
                 case ChannelType.Red:

@@ -1,4 +1,5 @@
-﻿using HLight.Enums;
+﻿using HLight.Controls;
+using HLight.Enums;
 using HLight.Forms;
 using HLight.Models;
 using System;
@@ -11,7 +12,7 @@ namespace HLight
 {
     public partial class ControlForm : MetroFramework.Forms.MetroForm
     {
-        private HChannelControl _ledControlForm;
+        private HChannelControl _channelControl;
 
         private List<StoreLed> _storeLeds = new List<StoreLed>()
         {
@@ -52,6 +53,8 @@ namespace HLight
         private List<HLedControl> _ledControls = new List<HLedControl>();
 
         private List<HLedControl> _selectedLedControls = new List<HLedControl>();
+
+        private List<HGroupControl> _groupControls = new List<HGroupControl>();
 
         private bool _ctrlPressed;
         public ControlForm()
@@ -128,16 +131,17 @@ namespace HLight
                 this.unselectOtherLeds(currentLed);
             }
             _selectedLedControls = _ledControls.Where(x => x.IsSelected).ToList();
-            if (_ledControlForm == null || _ledControlForm.IsDisposed)
+            this.setSelectedGroups(_selectedLedControls);
+            if (_channelControl == null || _channelControl.IsDisposed)
             {
-                _ledControlForm = new HChannelControl(_ledControls, _selectedLedControls);
+                _channelControl = new HChannelControl(_ledControls, _selectedLedControls, timerSpeed);
             }
             else
             {
-                _ledControlForm.Init(_ledControls, _selectedLedControls);
+                _channelControl.Init(_ledControls, _selectedLedControls, timerSpeed);
             }
-            _ledControlForm.Dock = DockStyle.Bottom;
-            EnvironmentPanel.Controls.Add(_ledControlForm);
+            _channelControl.Dock = DockStyle.Bottom;
+            EnvironmentPanel.Controls.Add(_channelControl);
         }
 
         private void unselectOtherLeds(HLedControl currentLed)
@@ -148,6 +152,21 @@ namespace HLight
                 {
                     ledControl.SetSelected(false);
                 }
+            }
+        }
+
+        private void AddGroupButton_Click(object sender, EventArgs e)
+        {
+            var groupPanel = new HGroupControl(_selectedLedControls);
+            this._groupControls.Add(groupPanel);
+            this.GroupPanel.Controls.Add(groupPanel);
+        }
+
+        private void setSelectedGroups(List<HLedControl> selectedLeds)
+        {
+            foreach (var groupControl in _groupControls)
+            {
+                groupControl.SelectedLedControls = selectedLeds;
             }
         }
     }
