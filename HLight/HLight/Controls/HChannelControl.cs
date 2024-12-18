@@ -13,6 +13,9 @@ namespace HLight.Forms
         public List<HLedControl> SelectedLedControls { get; set; }
         public List<HGroupControl> GroupControls { get; set; }
 
+        public HTrackBar ChannelMasterSpeedBar { get; set; }
+        public HTrackBar ChannelFaderBar { get; set; }
+
         private List<HTrackBar> _channelBars;
 
         private HTrackBar _channelBar;
@@ -59,6 +62,9 @@ namespace HLight.Forms
             channelFaderBar.ChannelTrackBar.Value = channelFaderBar.ChannelTrackBar.Minimum;
             channelFaderBar.ChannelTrackBar.RightToLeft = RightToLeft.Yes;
             channelFaderBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelFaderTrackBar_ValueChanged);
+
+            ChannelMasterSpeedBar = channelMasterSpeedBar;
+            ChannelFaderBar = channelFaderBar;
 
             this.Controls.Add(channelMasterDimmerBar);
             this.Controls.Add(channelMasterSpeedBar);

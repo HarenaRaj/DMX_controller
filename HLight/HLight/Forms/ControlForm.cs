@@ -142,6 +142,7 @@ namespace HLight
             }
             _channelControl.Dock = DockStyle.Bottom;
             EnvironmentPanel.Controls.Add(_channelControl);
+            GroupParentPanel.Show();
         }
 
         private void unselectOtherLeds(HLedControl currentLed)
@@ -157,7 +158,9 @@ namespace HLight
 
         private void AddGroupButton_Click(object sender, EventArgs e)
         {
-            var groupPanel = new HGroupControl(_selectedLedControls);
+            var groupPanel = new HGroupControl(_selectedLedControls, 
+                _channelControl.ChannelMasterSpeedBar, 
+                _channelControl.ChannelFaderBar);
             groupPanel.NameGroupText.Text = "Groupe " + (this._groupControls.Count + 1);
             this._groupControls.Add(groupPanel);
             this.GroupPanel.Controls.Add(groupPanel);

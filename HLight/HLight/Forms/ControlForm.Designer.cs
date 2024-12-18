@@ -68,6 +68,7 @@
             this.GroupParentPanel.Name = "GroupParentPanel";
             this.GroupParentPanel.Size = new System.Drawing.Size(704, 1042);
             this.GroupParentPanel.TabIndex = 0;
+            this.GroupParentPanel.Visible = false;
             // 
             // AddGroupButton
             // 

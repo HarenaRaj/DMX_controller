@@ -2,10 +2,10 @@
 
 namespace HLight.Controls
 {
-    public partial class HSceneButton : HMiniButton
+    public partial class HAnimationButton : HMiniButton
     {
-        public Scene Scene { get; set; }
-        public HSceneButton()
+        public Animation Animation { get; set; }
+        public HAnimationButton()
         {
             this.Size = new System.Drawing.Size(20, 20);
             this.TabIndex = 1;

@@ -8,6 +8,6 @@ namespace HLight.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Led> Leds { get; set; }
-        public List<Scene> Scenes { get; set; }
+        public List<ScenePage> ScenePages { get; set; }
     }
 }

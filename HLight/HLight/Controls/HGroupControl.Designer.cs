@@ -40,18 +40,20 @@
             this.LedGroupTabControl = new MetroFramework.Controls.MetroTabControl();
             this.LedTabPage = new MetroFramework.Controls.MetroTabPage();
             this.SceneTabPage = new MetroFramework.Controls.MetroTabPage();
-            this.PlayPauseButton = new MetroFramework.Controls.MetroButton();
             this.SceneTabControl = new MetroFramework.Controls.MetroTabControl();
             this.Bank1 = new MetroFramework.Controls.MetroTabPage();
             this.Bank2 = new MetroFramework.Controls.MetroTabPage();
             this.Bank3 = new MetroFramework.Controls.MetroTabPage();
+            this.Bank4 = new MetroFramework.Controls.MetroTabPage();
             this.Bank5 = new MetroFramework.Controls.MetroTabPage();
             this.Bank6 = new MetroFramework.Controls.MetroTabPage();
             this.Bank7 = new MetroFramework.Controls.MetroTabPage();
+            this.Bank8 = new MetroFramework.Controls.MetroTabPage();
             this.AddSceneButton = new MetroFramework.Controls.MetroButton();
             this.TimerSpeed = new System.Windows.Forms.Timer(this.components);
-            this.Bank4 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank8 = new MetroFramework.Controls.MetroTabPage();
+            this.AddAnimationButton = new MetroFramework.Controls.MetroButton();
+            this.PlayPauseButton = new MetroFramework.Controls.MetroButton();
+            this.TimerAnimation = new System.Windows.Forms.Timer(this.components);
             this.LedGroupTabControl.SuspendLayout();
             this.LedTabPage.SuspendLayout();
             this.SceneTabPage.SuspendLayout();
@@ -113,7 +115,7 @@
             // 
             this.AnimationPanel.AutoScroll = true;
             this.AnimationPanel.AutoScrollMinSize = new System.Drawing.Size(50, 50);
-            this.AnimationPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.AnimationPanel.BackColor = System.Drawing.Color.Transparent;
             this.AnimationPanel.Location = new System.Drawing.Point(127, 204);
             this.AnimationPanel.Name = "AnimationPanel";
             this.AnimationPanel.Size = new System.Drawing.Size(441, 117);
@@ -185,6 +187,7 @@
             // 
             // SceneTabPage
             // 
+            this.SceneTabPage.Controls.Add(this.AddAnimationButton);
             this.SceneTabPage.Controls.Add(this.PlayPauseButton);
             this.SceneTabPage.Controls.Add(this.AnimationPanel);
             this.SceneTabPage.Controls.Add(this.SceneLabel);
@@ -201,17 +204,6 @@
             this.SceneTabPage.VerticalScrollbarBarColor = true;
             this.SceneTabPage.VerticalScrollbarHighlightOnWheel = false;
             this.SceneTabPage.VerticalScrollbarSize = 10;
-            // 
-            // PlayPauseButton
-            // 
-            this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Play;
-            this.PlayPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PlayPauseButton.Location = new System.Drawing.Point(575, 22);
-            this.PlayPauseButton.Name = "PlayPauseButton";
-            this.PlayPauseButton.Size = new System.Drawing.Size(40, 40);
-            this.PlayPauseButton.TabIndex = 10;
-            this.PlayPauseButton.UseSelectable = true;
-            this.PlayPauseButton.Click += new System.EventHandler(this.PlayPauseButton_Click);
             // 
             // SceneTabControl
             // 
@@ -244,6 +236,7 @@
             this.Bank1.Size = new System.Drawing.Size(434, 126);
             this.Bank1.TabIndex = 0;
             this.Bank1.Text = "1";
+            this.Bank1.VerticalScrollbar = true;
             this.Bank1.VerticalScrollbarBarColor = false;
             this.Bank1.VerticalScrollbarHighlightOnWheel = false;
             this.Bank1.VerticalScrollbarSize = 10;
@@ -275,6 +268,20 @@
             this.Bank3.VerticalScrollbarBarColor = true;
             this.Bank3.VerticalScrollbarHighlightOnWheel = false;
             this.Bank3.VerticalScrollbarSize = 10;
+            // 
+            // Bank4
+            // 
+            this.Bank4.HorizontalScrollbarBarColor = true;
+            this.Bank4.HorizontalScrollbarHighlightOnWheel = false;
+            this.Bank4.HorizontalScrollbarSize = 10;
+            this.Bank4.Location = new System.Drawing.Point(4, 34);
+            this.Bank4.Name = "Bank4";
+            this.Bank4.Size = new System.Drawing.Size(434, 126);
+            this.Bank4.TabIndex = 3;
+            this.Bank4.Text = "4";
+            this.Bank4.VerticalScrollbarBarColor = true;
+            this.Bank4.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank4.VerticalScrollbarSize = 10;
             // 
             // Bank5
             // 
@@ -318,6 +325,20 @@
             this.Bank7.VerticalScrollbarHighlightOnWheel = false;
             this.Bank7.VerticalScrollbarSize = 10;
             // 
+            // Bank8
+            // 
+            this.Bank8.HorizontalScrollbarBarColor = true;
+            this.Bank8.HorizontalScrollbarHighlightOnWheel = false;
+            this.Bank8.HorizontalScrollbarSize = 10;
+            this.Bank8.Location = new System.Drawing.Point(4, 34);
+            this.Bank8.Name = "Bank8";
+            this.Bank8.Size = new System.Drawing.Size(434, 126);
+            this.Bank8.TabIndex = 7;
+            this.Bank8.Text = "8";
+            this.Bank8.VerticalScrollbarBarColor = true;
+            this.Bank8.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank8.VerticalScrollbarSize = 10;
+            // 
             // AddSceneButton
             // 
             this.AddSceneButton.Location = new System.Drawing.Point(465, 14);
@@ -332,33 +353,32 @@
             // 
             this.TimerSpeed.Tick += new System.EventHandler(this.TimerSpeed_Tick);
             // 
-            // Bank4
+            // AddAnimationButton
             // 
-            this.Bank4.HorizontalScrollbarBarColor = true;
-            this.Bank4.HorizontalScrollbarHighlightOnWheel = false;
-            this.Bank4.HorizontalScrollbarSize = 10;
-            this.Bank4.Location = new System.Drawing.Point(4, 34);
-            this.Bank4.Name = "Bank4";
-            this.Bank4.Size = new System.Drawing.Size(434, 126);
-            this.Bank4.TabIndex = 3;
-            this.Bank4.Text = "4";
-            this.Bank4.VerticalScrollbarBarColor = true;
-            this.Bank4.VerticalScrollbarHighlightOnWheel = false;
-            this.Bank4.VerticalScrollbarSize = 10;
+            this.AddAnimationButton.BackgroundImage = global::HLight.Properties.Resources.Add;
+            this.AddAnimationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.AddAnimationButton.Location = new System.Drawing.Point(575, 204);
+            this.AddAnimationButton.Name = "AddAnimationButton";
+            this.AddAnimationButton.Size = new System.Drawing.Size(40, 40);
+            this.AddAnimationButton.TabIndex = 12;
+            this.AddAnimationButton.UseSelectable = true;
+            this.AddAnimationButton.UseStyleColors = true;
+            this.AddAnimationButton.Click += new System.EventHandler(this.AddAnimationButton_Click);
             // 
-            // Bank8
+            // PlayPauseButton
             // 
-            this.Bank8.HorizontalScrollbarBarColor = true;
-            this.Bank8.HorizontalScrollbarHighlightOnWheel = false;
-            this.Bank8.HorizontalScrollbarSize = 10;
-            this.Bank8.Location = new System.Drawing.Point(4, 34);
-            this.Bank8.Name = "Bank8";
-            this.Bank8.Size = new System.Drawing.Size(434, 126);
-            this.Bank8.TabIndex = 7;
-            this.Bank8.Text = "8";
-            this.Bank8.VerticalScrollbarBarColor = true;
-            this.Bank8.VerticalScrollbarHighlightOnWheel = false;
-            this.Bank8.VerticalScrollbarSize = 10;
+            this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Play;
+            this.PlayPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.PlayPauseButton.Location = new System.Drawing.Point(575, 22);
+            this.PlayPauseButton.Name = "PlayPauseButton";
+            this.PlayPauseButton.Size = new System.Drawing.Size(40, 40);
+            this.PlayPauseButton.TabIndex = 10;
+            this.PlayPauseButton.UseSelectable = true;
+            this.PlayPauseButton.Click += new System.EventHandler(this.PlayPauseButton_Click);
+            // 
+            // TimerAnimation
+            // 
+            this.TimerAnimation.Tick += new System.EventHandler(this.TimerAnimation_Tick);
             // 
             // HGroupControl
             // 
@@ -407,5 +427,7 @@
         private MetroFramework.Controls.MetroTabPage Bank7;
         private MetroFramework.Controls.MetroTabPage Bank4;
         private MetroFramework.Controls.MetroTabPage Bank8;
+        private MetroFramework.Controls.MetroButton AddAnimationButton;
+        public System.Windows.Forms.Timer TimerAnimation;
     }
 }
