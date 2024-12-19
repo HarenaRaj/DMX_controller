@@ -8,7 +8,7 @@ namespace HLight.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int NumberChannel { get; set; }
-        public List<Channel> Channels { get; set; }
+        public List<StoreLedChannel> Channels { get; set; }
         public LedType Type { get; set; }
     }
 }

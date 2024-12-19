@@ -115,7 +115,7 @@ namespace HLight.Forms
                     _channelBar.AutoSize = false;
                     _channelBar.ChannelLabel.Text = ChanneTypeString.GetString(SelectedLedControls.Last().Led.StoreLed.Channels[i].Type);
                     _channelBar.Type = SelectedLedControls.Last().Led.Channels[i].Type;
-                    _channelBar.Id = SelectedLedControls.Last().Led.Id;
+                    _channelBar.Id = SelectedLedControls.Last().Led.Key;
                     _channelBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelTrackBar_ValueChanged);
 
                     switch (_channelBar.Type)

@@ -2,6 +2,7 @@
 using HLight.Enums;
 using HLight.Forms;
 using HLight.Models;
+using HLight.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,41 +15,42 @@ namespace HLight
     {
         private HChannelControl _channelControl;
 
-        private List<StoreLed> _storeLeds = new List<StoreLed>()
-        {
-            new StoreLed() {
-                Id = 1,
-                Name = "Par Led LPC007H",
-                NumberChannel = 7,
-                Type = LedType.LPC007H,
-                Channels = new List<Channel>()
-                {
-                    new Channel() {Id = 1, ChannelNumber = 1, Type = ChannelType.Dimmer},
-                    new Channel() {Id = 2, ChannelNumber = 2, Type = ChannelType.Red},
-                    new Channel() {Id = 3, ChannelNumber = 3, Type = ChannelType.Green},
-                    new Channel() {Id = 4, ChannelNumber = 4, Type = ChannelType.Blue},
-                    new Channel() {Id = 5, ChannelNumber = 5, Type = ChannelType.Strobe},
-                    new Channel() {Id = 6, ChannelNumber = 6, Type = ChannelType.SetProgram},
-                    new Channel() {Id = 7, ChannelNumber = 7, Type = ChannelType.Speed},
-                }
-            },
-            new StoreLed() {
-                Id = 2,
-                Name = "Par Led LPC007",
-                NumberChannel = 7,
-                Type = LedType.LPC007,
-                Channels = new List<Channel>()
-                {
-                    new Channel() {Id = 1, ChannelNumber = 1, Type = ChannelType.Dimmer},
-                    new Channel() {Id = 2, ChannelNumber = 2, Type = ChannelType.Red},
-                    new Channel() {Id = 3, ChannelNumber = 3, Type = ChannelType.Green},
-                    new Channel() {Id = 4, ChannelNumber = 4, Type = ChannelType.Blue},
-                    new Channel() {Id = 5, ChannelNumber = 5, Type = ChannelType.Strobe},
-                    new Channel() {Id = 6, ChannelNumber = 6, Type = ChannelType.SetProgram},
-                    new Channel() {Id = 7, ChannelNumber = 7, Type = ChannelType.Speed},
-                }
-            }
-        };
+        //private List<StoreLed> _storeLeds = new List<StoreLed>()
+        //{
+        //    new StoreLed() {
+        //        Id = 1,
+        //        Name = "Par Led LPC007H",
+        //        NumberChannel = 7,
+        //        Type = LedType.LPC007H,
+        //        Channels = new List<StoreLedChannel>()
+        //        {
+        //            new StoreLedChannel() {Id = 1, ChannelNumber = 1, Type = ChannelType.Dimmer},
+        //            new StoreLedChannel() {Id = 2, ChannelNumber = 2, Type = ChannelType.Red},
+        //            new StoreLedChannel() {Id = 3, ChannelNumber = 3, Type = ChannelType.Green},
+        //            new StoreLedChannel() {Id = 4, ChannelNumber = 4, Type = ChannelType.Blue},
+        //            new StoreLedChannel() {Id = 5, ChannelNumber = 5, Type = ChannelType.Strobe},
+        //            new StoreLedChannel() {Id = 6, ChannelNumber = 6, Type = ChannelType.SetProgram},
+        //            new StoreLedChannel() {Id = 7, ChannelNumber = 7, Type = ChannelType.Speed},
+        //        }
+        //    },
+        //    new StoreLed() {
+        //        Id = 2,
+        //        Name = "Par Led LPC007",
+        //        NumberChannel = 7,
+        //        Type = LedType.LPC007,
+        //        Channels = new List<StoreLedChannel>()
+        //        {
+        //            new StoreLedChannel() {Id = 1, ChannelNumber = 1, Type = ChannelType.Dimmer},
+        //            new StoreLedChannel() {Id = 2, ChannelNumber = 2, Type = ChannelType.Red},
+        //            new StoreLedChannel() {Id = 3, ChannelNumber = 3, Type = ChannelType.Green},
+        //            new StoreLedChannel() {Id = 4, ChannelNumber = 4, Type = ChannelType.Blue},
+        //            new StoreLedChannel() {Id = 5, ChannelNumber = 5, Type = ChannelType.Strobe},
+        //            new StoreLedChannel() {Id = 6, ChannelNumber = 6, Type = ChannelType.SetProgram},
+        //            new StoreLedChannel() {Id = 7, ChannelNumber = 7, Type = ChannelType.Speed},
+        //        }
+        //    }
+        //};
+        private List<StoreLed> _storeLeds;
 
         private List<HLedControl> _ledControls = new List<HLedControl>();
 
@@ -57,9 +59,17 @@ namespace HLight
         private List<HGroupControl> _groupControls = new List<HGroupControl>();
 
         private bool _ctrlPressed;
+
+        private StoreLedRepository _storeLedRepository;
+        private LedRepository _ledRepository;
         public ControlForm()
         {
             InitializeComponent();
+
+            _ledRepository = LedRepository.GetInstance();
+            _storeLedRepository = StoreLedRepository.GetInstance();
+            _storeLeds = _storeLedRepository.GetStoreLeds();
+
             foreach (var led in _storeLeds)
             {
                 var lebBox = new HStoreLedControl(led);
@@ -74,23 +84,23 @@ namespace HLight
         private void ledBox_Click(object sender, MouseEventArgs e)
         {
             var ledControl = (HStoreLedControl) sender;
-            var controlCount = this.UniversPanel.Controls.Count;
-            var existLedControls = this.UniversPanel.Controls.OfType<HLedControl>().Where(x => x.Led.StoreLed.Type == ledControl.Led.Type);
+            var controlCount = this.UniversePanel.Controls.Count;
+            var existLedControls = this.UniversePanel.Controls.OfType<HLedControl>().Where(x => x.Led.StoreLed.Type == ledControl.Led.Type);
             var newLed = new Led()
             {
-                Id = Guid.NewGuid(),
+                Key = Guid.NewGuid(),
                 ChannelBegin = 1,
                 Name = $"{ledControl.Led.Name} {existLedControls.Count() + 1}",
                 StoreLed = ledControl.Led,
-                Channels = new List<Channel>()
+                Channels = new List<LedChannel>()
             };
 
             foreach (var channel in ledControl.Led.Channels)
             {
-                var newChannel = new Channel()
+                var newChannel = new LedChannel()
                 {
                     ChannelNumber = channel.ChannelNumber,
-                    Value = channel.Type == ChannelType.Dimmer ? 255 : channel.Value,
+                    Value = channel.Type == ChannelType.Dimmer ? 255 : 0,
                     Type = channel.Type
                 };
                 newLed.Channels.Add(newChannel);
@@ -105,7 +115,7 @@ namespace HLight
             newLedControl.KeyUp += NewLedControl_KeyUp;
             ControlExtension.Draggable(newLedControl, true);
             _ledControls.Add(newLedControl);
-            this.UniversPanel.Controls.Add(newLedControl);
+            this.UniversePanel.Controls.Add(newLedControl);
         }
 
         private void NewLedControl_KeyUp(object sender, KeyEventArgs e)
@@ -124,7 +134,7 @@ namespace HLight
         private void ledControl_Click(object sender, MouseEventArgs e)
         {
             var ledControl = (HLedControl)sender;
-            var currentLed = _ledControls.Where(x => x.Led.Id == ledControl.Led.Id).FirstOrDefault();
+            var currentLed = _ledControls.Where(x => x.Led.Key == ledControl.Led.Key).FirstOrDefault();
             currentLed.SetSelected(true);
             
             if (e.Button == MouseButtons.Right)
@@ -152,7 +162,7 @@ namespace HLight
                     _channelControl.Init(_ledControls, _selectedLedControls, _groupControls);
                 }
                 _channelControl.Dock = DockStyle.Bottom;
-                UniversPanel.Controls.Add(_channelControl);
+                UniversePanel.Controls.Add(_channelControl);
                 GroupParentPanel.Show();
             }
         }
@@ -161,7 +171,7 @@ namespace HLight
         {
             foreach (var ledControl in _ledControls)
             {
-                if (ledControl.Led.Id != currentLed.Led.Id)
+                if (ledControl.Led.Key != currentLed.Led.Key)
                 {
                     ledControl.SetSelected(false);
                 }
@@ -192,7 +202,7 @@ namespace HLight
             _selectedLedControls = _ledControls.Where(x => x.IsSelected).ToList();
             foreach (var ledControl in _selectedLedControls)
             {
-                UniversPanel.Controls.Remove(ledControl);
+                UniversePanel.Controls.Remove(ledControl);
             }
         }
 

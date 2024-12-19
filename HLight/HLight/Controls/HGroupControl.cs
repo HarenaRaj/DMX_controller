@@ -128,16 +128,16 @@ namespace HLight.Controls
                 {
                     var newLed = new Led()
                     {
-                        Id = led.Led.Id,
+                        Key = led.Led.Key,
                         Name = led.Led.Name,
                         ChannelBegin = led.Led.ChannelBegin,
-                        Channels = new List<Channel>(),
-                        IdStoreLed = led.Led.IdStoreLed,
+                        Channels = new List<LedChannel>(),
+                        StoreLedId = led.Led.StoreLedId,
                         StoreLed = led.Led.StoreLed
                     };
                     foreach (var channel in led.Led.Channels)
                     {
-                        var newChannel = new Channel()
+                        var newChannel = new LedChannel()
                         {
                             ChannelNumber = channel.ChannelNumber,
                             Id = channel.Id,
@@ -184,7 +184,7 @@ namespace HLight.Controls
         {
             foreach (var ledControl in LedControls)
             {
-                var currentLed = scene.Leds.Where(x => x.Id == ledControl.Led.Id).FirstOrDefault();
+                var currentLed = scene.Leds.Where(x => x.Key == ledControl.Led.Key).FirstOrDefault();
                 if (currentLed != null)
                 {
                     foreach (var currentChannel in currentLed.Channels)

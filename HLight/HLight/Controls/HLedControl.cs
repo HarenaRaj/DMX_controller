@@ -33,12 +33,12 @@ namespace HLight
             this.OutputLed = new Led()
             {
                 ChannelBegin = led.ChannelBegin,
-                Channels = new List<Channel>(),
+                Channels = new List<LedChannel>(),
                 StoreLed = led.StoreLed,
             };
-            foreach (Channel channel in led.Channels)
+            foreach (LedChannel channel in led.Channels)
             {
-                var newChannel = new Channel()
+                var newChannel = new LedChannel()
                 {
                     ChannelNumber = channel.ChannelNumber,
                     Type = channel.Type,
