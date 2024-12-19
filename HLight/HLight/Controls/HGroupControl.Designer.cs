@@ -40,24 +40,51 @@
             this.LedGroupTabControl = new MetroFramework.Controls.MetroTabControl();
             this.LedTabPage = new MetroFramework.Controls.MetroTabPage();
             this.SceneTabPage = new MetroFramework.Controls.MetroTabPage();
-            this.SceneTabControl = new MetroFramework.Controls.MetroTabControl();
-            this.Bank1 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank2 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank3 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank4 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank5 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank6 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank7 = new MetroFramework.Controls.MetroTabPage();
-            this.Bank8 = new MetroFramework.Controls.MetroTabPage();
-            this.AddSceneButton = new MetroFramework.Controls.MetroButton();
-            this.TimerSpeed = new System.Windows.Forms.Timer(this.components);
             this.AddAnimationButton = new MetroFramework.Controls.MetroButton();
             this.PlayPauseButton = new MetroFramework.Controls.MetroButton();
+            this.SceneTabControl = new MetroFramework.Controls.MetroTabControl();
+            this.Bank1 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank2 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank3 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank4 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank5 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank6 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank7 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel7 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Bank8 = new MetroFramework.Controls.MetroTabPage();
+            this.BankPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.AddSceneButton = new MetroFramework.Controls.MetroButton();
+            this.TimerSpeed = new System.Windows.Forms.Timer(this.components);
             this.TimerAnimation = new System.Windows.Forms.Timer(this.components);
+            this.SceneContextMenu = new MetroFramework.Controls.MetroContextMenu(this.components);
+            this.DeleteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AnimationContextMenu = new MetroFramework.Controls.MetroContextMenu(this.components);
+            this.DeleteAnimationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LedContextMenu = new MetroFramework.Controls.MetroContextMenu(this.components);
+            this.DeleteLedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteGroupButton = new System.Windows.Forms.PictureBox();
             this.LedGroupTabControl.SuspendLayout();
             this.LedTabPage.SuspendLayout();
             this.SceneTabPage.SuspendLayout();
             this.SceneTabControl.SuspendLayout();
+            this.Bank1.SuspendLayout();
+            this.Bank2.SuspendLayout();
+            this.Bank3.SuspendLayout();
+            this.Bank4.SuspendLayout();
+            this.Bank5.SuspendLayout();
+            this.Bank6.SuspendLayout();
+            this.Bank7.SuspendLayout();
+            this.Bank8.SuspendLayout();
+            this.SceneContextMenu.SuspendLayout();
+            this.AnimationContextMenu.SuspendLayout();
+            this.LedContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DeleteGroupButton)).BeginInit();
             this.SuspendLayout();
             // 
             // NameGroupLabel
@@ -105,7 +132,7 @@
             // 
             this.SceneLabel.AutoSize = true;
             this.SceneLabel.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.SceneLabel.Location = new System.Drawing.Point(14, 53);
+            this.SceneLabel.Location = new System.Drawing.Point(14, 91);
             this.SceneLabel.Name = "SceneLabel";
             this.SceneLabel.Size = new System.Drawing.Size(47, 15);
             this.SceneLabel.TabIndex = 5;
@@ -133,9 +160,11 @@
             // 
             // LedPanel
             // 
+            this.LedPanel.AutoScroll = true;
+            this.LedPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.LedPanel.Location = new System.Drawing.Point(126, 21);
             this.LedPanel.Name = "LedPanel";
-            this.LedPanel.Size = new System.Drawing.Size(441, 211);
+            this.LedPanel.Size = new System.Drawing.Size(491, 307);
             this.LedPanel.TabIndex = 11;
             // 
             // LedLabel
@@ -150,7 +179,7 @@
             // 
             // AddLedButton
             // 
-            this.AddLedButton.Location = new System.Drawing.Point(321, 14);
+            this.AddLedButton.Location = new System.Drawing.Point(311, 14);
             this.AddLedButton.Name = "AddLedButton";
             this.AddLedButton.Size = new System.Drawing.Size(138, 25);
             this.AddLedButton.TabIndex = 12;
@@ -164,7 +193,7 @@
             this.LedGroupTabControl.Controls.Add(this.SceneTabPage);
             this.LedGroupTabControl.Location = new System.Drawing.Point(3, 55);
             this.LedGroupTabControl.Name = "LedGroupTabControl";
-            this.LedGroupTabControl.SelectedIndex = 1;
+            this.LedGroupTabControl.SelectedIndex = 0;
             this.LedGroupTabControl.Size = new System.Drawing.Size(1191, 861);
             this.LedGroupTabControl.TabIndex = 13;
             this.LedGroupTabControl.UseSelectable = true;
@@ -205,6 +234,29 @@
             this.SceneTabPage.VerticalScrollbarHighlightOnWheel = false;
             this.SceneTabPage.VerticalScrollbarSize = 10;
             // 
+            // AddAnimationButton
+            // 
+            this.AddAnimationButton.BackgroundImage = global::HLight.Properties.Resources.Add;
+            this.AddAnimationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.AddAnimationButton.Location = new System.Drawing.Point(575, 68);
+            this.AddAnimationButton.Name = "AddAnimationButton";
+            this.AddAnimationButton.Size = new System.Drawing.Size(40, 40);
+            this.AddAnimationButton.TabIndex = 12;
+            this.AddAnimationButton.UseSelectable = true;
+            this.AddAnimationButton.UseStyleColors = true;
+            this.AddAnimationButton.Click += new System.EventHandler(this.AddAnimationButton_Click);
+            // 
+            // PlayPauseButton
+            // 
+            this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Play;
+            this.PlayPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.PlayPauseButton.Location = new System.Drawing.Point(575, 22);
+            this.PlayPauseButton.Name = "PlayPauseButton";
+            this.PlayPauseButton.Size = new System.Drawing.Size(40, 40);
+            this.PlayPauseButton.TabIndex = 10;
+            this.PlayPauseButton.UseSelectable = true;
+            this.PlayPauseButton.Click += new System.EventHandler(this.PlayPauseButton_Click);
+            // 
             // SceneTabControl
             // 
             this.SceneTabControl.Controls.Add(this.Bank1);
@@ -227,8 +279,9 @@
             // Bank1
             // 
             this.Bank1.AutoScroll = true;
+            this.Bank1.Controls.Add(this.BankPanel1);
             this.Bank1.HorizontalScrollbar = true;
-            this.Bank1.HorizontalScrollbarBarColor = true;
+            this.Bank1.HorizontalScrollbarBarColor = false;
             this.Bank1.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank1.HorizontalScrollbarSize = 10;
             this.Bank1.Location = new System.Drawing.Point(4, 34);
@@ -241,8 +294,19 @@
             this.Bank1.VerticalScrollbarHighlightOnWheel = false;
             this.Bank1.VerticalScrollbarSize = 10;
             // 
+            // BankPanel1
+            // 
+            this.BankPanel1.AutoSize = true;
+            this.BankPanel1.BackColor = System.Drawing.Color.White;
+            this.BankPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel1.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel1.Name = "BankPanel1";
+            this.BankPanel1.Size = new System.Drawing.Size(408, 0);
+            this.BankPanel1.TabIndex = 2;
+            // 
             // Bank2
             // 
+            this.Bank2.Controls.Add(this.BankPanel2);
             this.Bank2.HorizontalScrollbarBarColor = true;
             this.Bank2.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank2.HorizontalScrollbarSize = 10;
@@ -251,12 +315,24 @@
             this.Bank2.Size = new System.Drawing.Size(434, 126);
             this.Bank2.TabIndex = 1;
             this.Bank2.Text = "2";
+            this.Bank2.VerticalScrollbar = true;
             this.Bank2.VerticalScrollbarBarColor = true;
-            this.Bank2.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank2.VerticalScrollbarHighlightOnWheel = true;
             this.Bank2.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel2
+            // 
+            this.BankPanel2.AutoSize = true;
+            this.BankPanel2.BackColor = System.Drawing.Color.White;
+            this.BankPanel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel2.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel2.Name = "BankPanel2";
+            this.BankPanel2.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel2.TabIndex = 3;
             // 
             // Bank3
             // 
+            this.Bank3.Controls.Add(this.BankPanel3);
             this.Bank3.HorizontalScrollbarBarColor = true;
             this.Bank3.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank3.HorizontalScrollbarSize = 10;
@@ -265,12 +341,24 @@
             this.Bank3.Size = new System.Drawing.Size(434, 126);
             this.Bank3.TabIndex = 2;
             this.Bank3.Text = "3";
+            this.Bank3.VerticalScrollbar = true;
             this.Bank3.VerticalScrollbarBarColor = true;
-            this.Bank3.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank3.VerticalScrollbarHighlightOnWheel = true;
             this.Bank3.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel3
+            // 
+            this.BankPanel3.AutoSize = true;
+            this.BankPanel3.BackColor = System.Drawing.Color.White;
+            this.BankPanel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel3.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel3.Name = "BankPanel3";
+            this.BankPanel3.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel3.TabIndex = 3;
             // 
             // Bank4
             // 
+            this.Bank4.Controls.Add(this.BankPanel4);
             this.Bank4.HorizontalScrollbarBarColor = true;
             this.Bank4.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank4.HorizontalScrollbarSize = 10;
@@ -279,12 +367,24 @@
             this.Bank4.Size = new System.Drawing.Size(434, 126);
             this.Bank4.TabIndex = 3;
             this.Bank4.Text = "4";
+            this.Bank4.VerticalScrollbar = true;
             this.Bank4.VerticalScrollbarBarColor = true;
-            this.Bank4.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank4.VerticalScrollbarHighlightOnWheel = true;
             this.Bank4.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel4
+            // 
+            this.BankPanel4.AutoSize = true;
+            this.BankPanel4.BackColor = System.Drawing.Color.White;
+            this.BankPanel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel4.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel4.Name = "BankPanel4";
+            this.BankPanel4.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel4.TabIndex = 3;
             // 
             // Bank5
             // 
+            this.Bank5.Controls.Add(this.BankPanel5);
             this.Bank5.HorizontalScrollbarBarColor = true;
             this.Bank5.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank5.HorizontalScrollbarSize = 10;
@@ -293,13 +393,27 @@
             this.Bank5.Size = new System.Drawing.Size(434, 126);
             this.Bank5.TabIndex = 4;
             this.Bank5.Text = "5";
+            this.Bank5.VerticalScrollbar = true;
             this.Bank5.VerticalScrollbarBarColor = true;
-            this.Bank5.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank5.VerticalScrollbarHighlightOnWheel = true;
             this.Bank5.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel5
+            // 
+            this.BankPanel5.AutoSize = true;
+            this.BankPanel5.BackColor = System.Drawing.Color.White;
+            this.BankPanel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel5.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel5.Name = "BankPanel5";
+            this.BankPanel5.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel5.TabIndex = 3;
             // 
             // Bank6
             // 
-            this.Bank6.HorizontalScrollbarBarColor = true;
+            this.Bank6.AutoScroll = true;
+            this.Bank6.Controls.Add(this.BankPanel6);
+            this.Bank6.HorizontalScrollbar = true;
+            this.Bank6.HorizontalScrollbarBarColor = false;
             this.Bank6.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank6.HorizontalScrollbarSize = 10;
             this.Bank6.Location = new System.Drawing.Point(4, 34);
@@ -307,12 +421,24 @@
             this.Bank6.Size = new System.Drawing.Size(434, 126);
             this.Bank6.TabIndex = 5;
             this.Bank6.Text = "6";
+            this.Bank6.VerticalScrollbar = true;
             this.Bank6.VerticalScrollbarBarColor = true;
-            this.Bank6.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank6.VerticalScrollbarHighlightOnWheel = true;
             this.Bank6.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel6
+            // 
+            this.BankPanel6.AutoSize = true;
+            this.BankPanel6.BackColor = System.Drawing.Color.White;
+            this.BankPanel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel6.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel6.Name = "BankPanel6";
+            this.BankPanel6.Size = new System.Drawing.Size(408, 0);
+            this.BankPanel6.TabIndex = 3;
             // 
             // Bank7
             // 
+            this.Bank7.Controls.Add(this.BankPanel7);
             this.Bank7.HorizontalScrollbarBarColor = true;
             this.Bank7.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank7.HorizontalScrollbarSize = 10;
@@ -321,12 +447,24 @@
             this.Bank7.Size = new System.Drawing.Size(434, 126);
             this.Bank7.TabIndex = 6;
             this.Bank7.Text = "7";
+            this.Bank7.VerticalScrollbar = true;
             this.Bank7.VerticalScrollbarBarColor = true;
-            this.Bank7.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank7.VerticalScrollbarHighlightOnWheel = true;
             this.Bank7.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel7
+            // 
+            this.BankPanel7.AutoSize = true;
+            this.BankPanel7.BackColor = System.Drawing.Color.White;
+            this.BankPanel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel7.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel7.Name = "BankPanel7";
+            this.BankPanel7.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel7.TabIndex = 3;
             // 
             // Bank8
             // 
+            this.Bank8.Controls.Add(this.BankPanel8);
             this.Bank8.HorizontalScrollbarBarColor = true;
             this.Bank8.HorizontalScrollbarHighlightOnWheel = false;
             this.Bank8.HorizontalScrollbarSize = 10;
@@ -335,13 +473,24 @@
             this.Bank8.Size = new System.Drawing.Size(434, 126);
             this.Bank8.TabIndex = 7;
             this.Bank8.Text = "8";
+            this.Bank8.VerticalScrollbar = true;
             this.Bank8.VerticalScrollbarBarColor = true;
-            this.Bank8.VerticalScrollbarHighlightOnWheel = false;
+            this.Bank8.VerticalScrollbarHighlightOnWheel = true;
             this.Bank8.VerticalScrollbarSize = 10;
+            // 
+            // BankPanel8
+            // 
+            this.BankPanel8.AutoSize = true;
+            this.BankPanel8.BackColor = System.Drawing.Color.White;
+            this.BankPanel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BankPanel8.Location = new System.Drawing.Point(0, 0);
+            this.BankPanel8.Name = "BankPanel8";
+            this.BankPanel8.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel8.TabIndex = 3;
             // 
             // AddSceneButton
             // 
-            this.AddSceneButton.Location = new System.Drawing.Point(465, 14);
+            this.AddSceneButton.Location = new System.Drawing.Point(455, 14);
             this.AddSceneButton.Name = "AddSceneButton";
             this.AddSceneButton.Size = new System.Drawing.Size(138, 25);
             this.AddSceneButton.TabIndex = 14;
@@ -353,50 +502,105 @@
             // 
             this.TimerSpeed.Tick += new System.EventHandler(this.TimerSpeed_Tick);
             // 
-            // AddAnimationButton
-            // 
-            this.AddAnimationButton.BackgroundImage = global::HLight.Properties.Resources.Add;
-            this.AddAnimationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.AddAnimationButton.Location = new System.Drawing.Point(575, 204);
-            this.AddAnimationButton.Name = "AddAnimationButton";
-            this.AddAnimationButton.Size = new System.Drawing.Size(40, 40);
-            this.AddAnimationButton.TabIndex = 12;
-            this.AddAnimationButton.UseSelectable = true;
-            this.AddAnimationButton.UseStyleColors = true;
-            this.AddAnimationButton.Click += new System.EventHandler(this.AddAnimationButton_Click);
-            // 
-            // PlayPauseButton
-            // 
-            this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Play;
-            this.PlayPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PlayPauseButton.Location = new System.Drawing.Point(575, 22);
-            this.PlayPauseButton.Name = "PlayPauseButton";
-            this.PlayPauseButton.Size = new System.Drawing.Size(40, 40);
-            this.PlayPauseButton.TabIndex = 10;
-            this.PlayPauseButton.UseSelectable = true;
-            this.PlayPauseButton.Click += new System.EventHandler(this.PlayPauseButton_Click);
-            // 
             // TimerAnimation
             // 
             this.TimerAnimation.Tick += new System.EventHandler(this.TimerAnimation_Tick);
+            // 
+            // SceneContextMenu
+            // 
+            this.SceneContextMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.SceneContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DeleteMenuItem});
+            this.SceneContextMenu.Name = "SceneContextMenu";
+            this.SceneContextMenu.Size = new System.Drawing.Size(168, 36);
+            // 
+            // DeleteMenuItem
+            // 
+            this.DeleteMenuItem.Name = "DeleteMenuItem";
+            this.DeleteMenuItem.Size = new System.Drawing.Size(167, 32);
+            this.DeleteMenuItem.Text = "Supprimer";
+            this.DeleteMenuItem.Click += new System.EventHandler(this.DeleteSceneMenuItem_Click);
+            // 
+            // AnimationContextMenu
+            // 
+            this.AnimationContextMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.AnimationContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DeleteAnimationMenuItem});
+            this.AnimationContextMenu.Name = "SceneContextMenu";
+            this.AnimationContextMenu.Size = new System.Drawing.Size(168, 36);
+            // 
+            // DeleteAnimationMenuItem
+            // 
+            this.DeleteAnimationMenuItem.Name = "DeleteAnimationMenuItem";
+            this.DeleteAnimationMenuItem.Size = new System.Drawing.Size(167, 32);
+            this.DeleteAnimationMenuItem.Text = "Supprimer";
+            this.DeleteAnimationMenuItem.Click += new System.EventHandler(this.DeleteAnimationMenuItem_Click);
+            // 
+            // LedContextMenu
+            // 
+            this.LedContextMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.LedContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DeleteLedMenuItem});
+            this.LedContextMenu.Name = "SceneContextMenu";
+            this.LedContextMenu.Size = new System.Drawing.Size(168, 36);
+            // 
+            // DeleteLedMenuItem
+            // 
+            this.DeleteLedMenuItem.Name = "DeleteLedMenuItem";
+            this.DeleteLedMenuItem.Size = new System.Drawing.Size(167, 32);
+            this.DeleteLedMenuItem.Text = "Supprimer";
+            this.DeleteLedMenuItem.Click += new System.EventHandler(this.DeleteLedMenuItem_Click);
+            // 
+            // DeleteGroupButton
+            // 
+            this.DeleteGroupButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.DeleteGroupButton.Image = global::HLight.Properties.Resources.Delete;
+            this.DeleteGroupButton.Location = new System.Drawing.Point(626, 11);
+            this.DeleteGroupButton.Name = "DeleteGroupButton";
+            this.DeleteGroupButton.Size = new System.Drawing.Size(28, 28);
+            this.DeleteGroupButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.DeleteGroupButton.TabIndex = 15;
+            this.DeleteGroupButton.TabStop = false;
+            this.DeleteGroupButton.Click += new System.EventHandler(this.DeleteGroupButton_Click);
             // 
             // HGroupControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.DeleteGroupButton);
             this.Controls.Add(this.AddSceneButton);
             this.Controls.Add(this.LedGroupTabControl);
             this.Controls.Add(this.AddLedButton);
             this.Controls.Add(this.NameGroupLabel);
             this.Controls.Add(this.NameGroupText);
             this.Name = "HGroupControl";
-            this.Size = new System.Drawing.Size(640, 498);
+            this.Size = new System.Drawing.Size(665, 498);
             this.LedGroupTabControl.ResumeLayout(false);
             this.LedTabPage.ResumeLayout(false);
             this.LedTabPage.PerformLayout();
             this.SceneTabPage.ResumeLayout(false);
             this.SceneTabPage.PerformLayout();
             this.SceneTabControl.ResumeLayout(false);
+            this.Bank1.ResumeLayout(false);
+            this.Bank1.PerformLayout();
+            this.Bank2.ResumeLayout(false);
+            this.Bank2.PerformLayout();
+            this.Bank3.ResumeLayout(false);
+            this.Bank3.PerformLayout();
+            this.Bank4.ResumeLayout(false);
+            this.Bank4.PerformLayout();
+            this.Bank5.ResumeLayout(false);
+            this.Bank5.PerformLayout();
+            this.Bank6.ResumeLayout(false);
+            this.Bank6.PerformLayout();
+            this.Bank7.ResumeLayout(false);
+            this.Bank7.PerformLayout();
+            this.Bank8.ResumeLayout(false);
+            this.Bank8.PerformLayout();
+            this.SceneContextMenu.ResumeLayout(false);
+            this.AnimationContextMenu.ResumeLayout(false);
+            this.LedContextMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DeleteGroupButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -429,5 +633,20 @@
         private MetroFramework.Controls.MetroTabPage Bank8;
         private MetroFramework.Controls.MetroButton AddAnimationButton;
         public System.Windows.Forms.Timer TimerAnimation;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel1;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel2;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel3;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel4;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel5;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel6;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel7;
+        private System.Windows.Forms.FlowLayoutPanel BankPanel8;
+        private MetroFramework.Controls.MetroContextMenu SceneContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem DeleteMenuItem;
+        private MetroFramework.Controls.MetroContextMenu AnimationContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem DeleteAnimationMenuItem;
+        private MetroFramework.Controls.MetroContextMenu LedContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem DeleteLedMenuItem;
+        private System.Windows.Forms.PictureBox DeleteGroupButton;
     }
 }

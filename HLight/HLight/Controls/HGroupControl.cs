@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 
 namespace HLight.Controls
@@ -15,7 +14,12 @@ namespace HLight.Controls
 
         public List<Animation> Animations { get; set; }
 
+        private List<HGroupControl> _groupControls;
         private Animation _currentAnimation;
+        private FlowLayoutPanel _currentPanel;
+        private HSceneButton _currentSceneButton;
+        private HAnimationButton _currentAnimationButton;
+        private HLedLabel _currentLedLabel;
         private bool _isPlay = false;
         private bool _isPlayAnimation = false;
         private int _iAuto = 0;
@@ -33,11 +37,13 @@ namespace HLight.Controls
             Animations = new List<Animation>();
         }
 
-        public HGroupControl(List<HLedControl> selectedLedControls, 
+        public HGroupControl(List<HLedControl> selectedLedControls,
+            List<HGroupControl> groupControls,
             HTrackBar channelMasterSpeedBar, 
             HTrackBar channelFaderBar) : this()
         {
             SelectedLedControls = selectedLedControls;
+            _groupControls = groupControls;
             _channelMasterSpeedBar = channelMasterSpeedBar;
             _channelFaderBar = channelFaderBar;
         }
@@ -55,7 +61,7 @@ namespace HLight.Controls
                 {
                     if (!LedControls.Contains(led))
                     {
-                        var ledLabel = new MetroFramework.Controls.MetroLabel();
+                        var ledLabel = new HLedLabel();
                         ledLabel.AutoSize = true;
                         ledLabel.FontSize = MetroFramework.MetroLabelSize.Small;
                         ledLabel.Name = led.Led.Name;
@@ -63,11 +69,23 @@ namespace HLight.Controls
                         ledLabel.TabIndex = 4;
                         ledLabel.Text = led.Led.Name;
                         ledLabel.UseCustomBackColor = true;
+                        ledLabel.LedControl = led;
+                        ledLabel.MouseDown += LedLabel_Click;
                         this.LedPanel.Controls.Add(ledLabel);
                         LedControls.Add(led);
                         Group.Leds.Add(led.Led);
                     }
                 }
+            }
+        }
+
+        private void LedLabel_Click(object sender, MouseEventArgs e)
+        {
+            var ledLabel = (HLedLabel)sender;
+            if (e.Button == MouseButtons.Right)
+            {
+                LedContextMenu.Show(ledLabel, e.X, e.Y);
+                _currentLedLabel = ledLabel;
             }
         }
 
@@ -95,10 +113,14 @@ namespace HLight.Controls
                     };
                 }
 
+                var lastScene = scenePage.Scenes.LastOrDefault();
+                int index;
+                if (lastScene == null) index = 1;
+                else index = lastScene.Order + 1;
                 var scene = new Scene()
                 {
-                    Id = scenePage.Scenes.Count + 1,
-                    Name = (scenePage.Scenes.Count + 1).ToString(),
+                    Order = index,
+                    Name = index.ToString(),
                     Leds = new List<Led>()
                 };
 
@@ -130,9 +152,10 @@ namespace HLight.Controls
                 buttonScene.Location = new System.Drawing.Point(((buttonScene.Width + 5) * (SceneTabControl.SelectedTab.Controls.Count - 2)), 0);
                 buttonScene.Name = scene.Name;
                 buttonScene.Text = scene.Name;
-                buttonScene.Click += ButtonScene_Click;
+                buttonScene.MouseDown += ButtonScene_Click;
                 buttonScene.Scene = scene;
-                SceneTabControl.SelectedTab.Controls.Add(buttonScene);
+                var pannel = SceneTabControl.SelectedTab.Controls.OfType<Control>().Where(x => x is FlowLayoutPanel).FirstOrDefault();
+                pannel.Controls.Add(buttonScene);
                 scenePage.Scenes.Add(scene);
 
                 if (!Group.ScenePages.Contains(scenePage))
@@ -142,10 +165,19 @@ namespace HLight.Controls
             }
         }
 
-        private void ButtonScene_Click(object sender, EventArgs e)
+        private void ButtonScene_Click(object sender, MouseEventArgs e)
         {
-            var sceneButton = (HSceneButton)sender;
-            changeSceneChannel(sceneButton.Scene);
+            var buttonScene = (HSceneButton)sender; 
+            if (e.Button == MouseButtons.Right)
+            {
+                SceneContextMenu.Show(buttonScene, 10, 10);
+                _currentSceneButton = buttonScene;
+            }
+            else
+            {
+                var sceneButton = (HSceneButton)sender;
+                changeSceneChannel(sceneButton.Scene);
+            }
         }
 
         private void changeSceneChannel(Scene scene)
@@ -186,11 +218,13 @@ namespace HLight.Controls
 
         private void PlayPauseButton_Click(object sender, EventArgs e)
         {
+            _currentPanel = (FlowLayoutPanel) SceneTabControl.SelectedTab.Controls.OfType<Control>()
+                .Where(x => x is FlowLayoutPanel).First();
             if (LedControls.Count == 0)
             {
                 MessageBox.Show("Veuillez ajouter au moins une (1) LED");
             }
-            else if (SceneTabControl.SelectedTab.Controls.Count <= 3)
+            else if (_currentPanel.Controls.Count < 2)
             {
                 MessageBox.Show("Veuillez ajouter au moins deux (2) Scènes");
             }
@@ -210,8 +244,9 @@ namespace HLight.Controls
 
         private void TimerSpeed_Tick(object sender, EventArgs e)
         {
-            if (_iAuto + 2 >= SceneTabControl.SelectedTab.Controls.Count) _iAuto = 0;
-            ButtonScene_Click(SceneTabControl.SelectedTab.Controls[_iAuto + 2], e);
+            if (_iAuto >= _currentPanel.Controls.Count) _iAuto = 0;
+            var sceneControl = (HSceneButton)_currentPanel.Controls[_iAuto];
+            changeSceneChannel(sceneControl.Scene);
             _iAuto++;
         }
 
@@ -219,9 +254,13 @@ namespace HLight.Controls
         {
             var currentIndex = SceneTabControl.SelectedIndex;
             var scenePage = Group.ScenePages[currentIndex];
+            var lastAnimation = Animations.LastOrDefault();
+            int index;
+            if (lastAnimation == null) index = 1;
+            else index = lastAnimation.Order + 1;
             var animation = new Animation()
             {
-                Name = (Animations.Count + 1).ToString(),
+                Name = index.ToString(),
                 Scenes = scenePage.Scenes,
                 Fader = _channelFaderBar.ChannelTrackBar.Value,
                 Speed = _channelMasterSpeedBar.ChannelTrackBar.Value,
@@ -231,39 +270,48 @@ namespace HLight.Controls
             buttonAnimation.Location = new System.Drawing.Point(((buttonAnimation.Width + 5) * (AnimationPanel.Controls.Count)), 0);
             buttonAnimation.Name = animation.Name;
             buttonAnimation.Text = animation.Name;
-            buttonAnimation.Click += ButtonAnimation_Click;
+            buttonAnimation.MouseDown += ButtonAnimation_Click;
             buttonAnimation.Animation = animation;
             AnimationPanel.Controls.Add(buttonAnimation);
             Animations.Add(animation);
         }
 
-        private void ButtonAnimation_Click(object sender, EventArgs e)
+        private void ButtonAnimation_Click(object sender, MouseEventArgs e)
         {
-            var animation = ((HAnimationButton)sender).Animation;
-            if (_currentAnimation == animation)
+            var buttonAnimation = (HAnimationButton)sender;
+            if (e.Button == MouseButtons.Right)
             {
-                _isPlayAnimation = !_isPlayAnimation;
+                AnimationContextMenu.Show(buttonAnimation, 10, 10);
+                _currentAnimationButton = buttonAnimation;
             }
             else
             {
-                _currentAnimation = animation;
-                _isPlayAnimation = true;
-            }
-
-            if (_isPlayAnimation)
-            {
-                _iAutoAnimation = 0;
-                TimerAnimation.Interval = Math.Abs(animation.Speed - _channelMasterSpeedBar.ChannelTrackBar.Maximum - _channelMasterSpeedBar.ChannelTrackBar.Minimum);
-
-                foreach (var ledControl in LedControls)
+                var animation = buttonAnimation.Animation;
+                if (_currentAnimation == animation)
                 {
-                    ledControl.TimerFader.Interval = animation.Fader;
+                    _isPlayAnimation = !_isPlayAnimation;
+                }
+                else
+                {
+                    _currentAnimation = animation;
+                    _isPlayAnimation = true;
                 }
 
-                TimerAnimation.Start();
-                pauseAutoScene();
+                if (_isPlayAnimation)
+                {
+                    _iAutoAnimation = 0;
+                    TimerAnimation.Interval = Math.Abs(animation.Speed - _channelMasterSpeedBar.ChannelTrackBar.Maximum - _channelMasterSpeedBar.ChannelTrackBar.Minimum);
+
+                    foreach (var ledControl in LedControls)
+                    {
+                        ledControl.TimerFader.Interval = animation.Fader;
+                    }
+
+                    TimerAnimation.Start();
+                    pauseAutoScene();
+                }
+                else TimerAnimation.Stop();
             }
-            else TimerAnimation.Stop();
         }
 
         private void TimerAnimation_Tick(object sender, EventArgs e)
@@ -271,6 +319,33 @@ namespace HLight.Controls
             if (_iAutoAnimation >= _currentAnimation.Scenes.Count) _iAutoAnimation = 0;
             changeSceneChannel(_currentAnimation.Scenes[_iAutoAnimation]);
             _iAutoAnimation++;
+        }
+
+        private void DeleteSceneMenuItem_Click(object sender, EventArgs e)
+        {
+            _currentPanel = SceneTabControl.SelectedTab.Controls.OfType<FlowLayoutPanel>().First();
+            var scenePage = Group.ScenePages.Where(x => x.Name == SceneTabControl.SelectedTab.Name).FirstOrDefault();
+            scenePage.Scenes.Remove(_currentSceneButton.Scene);
+            _currentPanel.Controls.Remove(_currentSceneButton);
+        }
+
+        private void DeleteAnimationMenuItem_Click(object sender, EventArgs e)
+        {
+            Animations.Remove(_currentAnimationButton.Animation);
+            AnimationPanel.Controls.Remove(_currentAnimationButton);
+        }
+
+        private void DeleteLedMenuItem_Click(object sender, EventArgs e)
+        {
+            this.LedPanel.Controls.Remove(_currentLedLabel);
+            LedControls.Remove(_currentLedLabel.LedControl);
+            Group.Leds.Remove(_currentLedLabel.LedControl.Led);
+        }
+
+        private void DeleteGroupButton_Click(object sender, EventArgs e)
+        {
+            this.Parent.Controls.Remove(this);
+            this._groupControls.Remove(this);
         }
     }
 }

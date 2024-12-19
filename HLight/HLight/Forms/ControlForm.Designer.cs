@@ -28,13 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.LedPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.EnvironmentPanel = new System.Windows.Forms.Panel();
+            this.UniversPanel = new System.Windows.Forms.Panel();
             this.GroupParentPanel = new System.Windows.Forms.Panel();
             this.AddGroupButton = new MetroFramework.Controls.MetroButton();
             this.GroupPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.EnvironmentPanel.SuspendLayout();
+            this.LedContextMenu = new MetroFramework.Controls.MetroContextMenu(this.components);
+            this.DeleteLedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UniversPanel.SuspendLayout();
             this.GroupParentPanel.SuspendLayout();
+            this.LedContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // LedPanel
@@ -45,16 +49,17 @@
             this.LedPanel.Size = new System.Drawing.Size(129, 1044);
             this.LedPanel.TabIndex = 1;
             // 
-            // EnvironmentPanel
+            // UniversPanel
             // 
-            this.EnvironmentPanel.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.EnvironmentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EnvironmentPanel.Controls.Add(this.GroupParentPanel);
-            this.EnvironmentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EnvironmentPanel.Location = new System.Drawing.Point(149, 60);
-            this.EnvironmentPanel.Name = "EnvironmentPanel";
-            this.EnvironmentPanel.Size = new System.Drawing.Size(1710, 1044);
-            this.EnvironmentPanel.TabIndex = 2;
+            this.UniversPanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.UniversPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.UniversPanel.Controls.Add(this.GroupParentPanel);
+            this.UniversPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UniversPanel.Location = new System.Drawing.Point(149, 60);
+            this.UniversPanel.Name = "UniversPanel";
+            this.UniversPanel.Size = new System.Drawing.Size(1710, 1044);
+            this.UniversPanel.TabIndex = 2;
+            this.UniversPanel.Click += new System.EventHandler(this.UniversPanel_Click);
             // 
             // GroupParentPanel
             // 
@@ -92,28 +97,46 @@
             this.GroupPanel.Size = new System.Drawing.Size(700, 1038);
             this.GroupPanel.TabIndex = 1;
             // 
+            // LedContextMenu
+            // 
+            this.LedContextMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.LedContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DeleteLedMenuItem});
+            this.LedContextMenu.Name = "LedContextMenu";
+            this.LedContextMenu.Size = new System.Drawing.Size(168, 36);
+            // 
+            // DeleteLedMenuItem
+            // 
+            this.DeleteLedMenuItem.Name = "DeleteLedMenuItem";
+            this.DeleteLedMenuItem.Size = new System.Drawing.Size(167, 32);
+            this.DeleteLedMenuItem.Text = "Supprimer";
+            this.DeleteLedMenuItem.Click += new System.EventHandler(this.DeleteLedMenuItem_Click);
+            // 
             // ControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1879, 1124);
-            this.Controls.Add(this.EnvironmentPanel);
+            this.Controls.Add(this.UniversPanel);
             this.Controls.Add(this.LedPanel);
             this.Name = "ControlForm";
             this.Theme = MetroFramework.MetroThemeStyle.Default;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.EnvironmentPanel.ResumeLayout(false);
+            this.UniversPanel.ResumeLayout(false);
             this.GroupParentPanel.ResumeLayout(false);
+            this.LedContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.FlowLayoutPanel LedPanel;
-        private System.Windows.Forms.Panel EnvironmentPanel;
+        private System.Windows.Forms.Panel UniversPanel;
         private System.Windows.Forms.Panel GroupParentPanel;
         private MetroFramework.Controls.MetroButton AddGroupButton;
         private System.Windows.Forms.FlowLayoutPanel GroupPanel;
+        private MetroFramework.Controls.MetroContextMenu LedContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem DeleteLedMenuItem;
     }
 }
 

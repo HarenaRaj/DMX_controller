@@ -66,16 +66,16 @@ namespace HLight
                 lebBox.Name = led.Name;
                 lebBox.Size = new Size(80, 120);
                 lebBox.Cursor = Cursors.Hand;
-                lebBox.Click += new System.EventHandler(this.ledBox_Click);
+                lebBox.MouseDown += this.ledBox_Click;
                 this.LedPanel.Controls.Add(lebBox);
             }
         }
 
-        private void ledBox_Click(object sender, System.EventArgs e)
+        private void ledBox_Click(object sender, MouseEventArgs e)
         {
             var ledControl = (HStoreLedControl) sender;
-            var controlCount = this.EnvironmentPanel.Controls.Count;
-            var existLedControls = this.EnvironmentPanel.Controls.OfType<HLedControl>().Where(x => x.Led.StoreLed.Type == ledControl.Led.Type);
+            var controlCount = this.UniversPanel.Controls.Count;
+            var existLedControls = this.UniversPanel.Controls.OfType<HLedControl>().Where(x => x.Led.StoreLed.Type == ledControl.Led.Type);
             var newLed = new Led()
             {
                 Id = Guid.NewGuid(),
@@ -100,12 +100,12 @@ namespace HLight
             newLedControl.Size = new Size(80, 120);
             newLedControl.Cursor = Cursors.Hand;
             newLedControl.Location = new Point(newLedControl.Size.Width * controlCount);
-            newLedControl.Click += new System.EventHandler(this.ledControl_Click);
+            newLedControl.MouseDown += this.ledControl_Click;
             newLedControl.KeyDown += NewLedControl_KeyDown;
             newLedControl.KeyUp += NewLedControl_KeyUp;
             ControlExtension.Draggable(newLedControl, true);
             _ledControls.Add(newLedControl);
-            this.EnvironmentPanel.Controls.Add(newLedControl);
+            this.UniversPanel.Controls.Add(newLedControl);
         }
 
         private void NewLedControl_KeyUp(object sender, KeyEventArgs e)
@@ -121,28 +121,40 @@ namespace HLight
             }
         }
 
-        private void ledControl_Click(object sender, System.EventArgs e)
+        private void ledControl_Click(object sender, MouseEventArgs e)
         {
             var ledControl = (HLedControl)sender;
             var currentLed = _ledControls.Where(x => x.Led.Id == ledControl.Led.Id).FirstOrDefault();
-            currentLed.SetSelected(!currentLed.IsSelected);
-            if (!_ctrlPressed)
+            currentLed.SetSelected(true);
+            
+            if (e.Button == MouseButtons.Right)
             {
-                this.unselectOtherLeds(currentLed);
-            }
-            _selectedLedControls = _ledControls.Where(x => x.IsSelected).ToList();
-            this.setSelectedGroups(_selectedLedControls);
-            if (_channelControl == null || _channelControl.IsDisposed)
-            {
-                _channelControl = new HChannelControl(_ledControls, _selectedLedControls, _groupControls);
+                LedContextMenu.Show(ledControl, e.X, e.Y);
+                if (_selectedLedControls.Count < 2)
+                {
+                    this.unselectOtherLeds(currentLed);
+                }
             }
             else
             {
-                _channelControl.Init(_ledControls, _selectedLedControls, _groupControls);
+                if (!_ctrlPressed)
+                {
+                    this.unselectOtherLeds(currentLed);
+                }
+                _selectedLedControls = _ledControls.Where(x => x.IsSelected).ToList();
+                this.setSelectedGroups(_selectedLedControls);
+                if (_channelControl == null || _channelControl.IsDisposed)
+                {
+                    _channelControl = new HChannelControl(_ledControls, _selectedLedControls, _groupControls);
+                }
+                else
+                {
+                    _channelControl.Init(_ledControls, _selectedLedControls, _groupControls);
+                }
+                _channelControl.Dock = DockStyle.Bottom;
+                UniversPanel.Controls.Add(_channelControl);
+                GroupParentPanel.Show();
             }
-            _channelControl.Dock = DockStyle.Bottom;
-            EnvironmentPanel.Controls.Add(_channelControl);
-            GroupParentPanel.Show();
         }
 
         private void unselectOtherLeds(HLedControl currentLed)
@@ -158,7 +170,8 @@ namespace HLight
 
         private void AddGroupButton_Click(object sender, EventArgs e)
         {
-            var groupPanel = new HGroupControl(_selectedLedControls, 
+            var groupPanel = new HGroupControl(_selectedLedControls,
+                this._groupControls,
                 _channelControl.ChannelMasterSpeedBar, 
                 _channelControl.ChannelFaderBar);
             groupPanel.NameGroupText.Text = "Groupe " + (this._groupControls.Count + 1);
@@ -171,6 +184,23 @@ namespace HLight
             foreach (var groupControl in _groupControls)
             {
                 groupControl.SelectedLedControls = selectedLeds;
+            }
+        }
+
+        private void DeleteLedMenuItem_Click(object sender, EventArgs e)
+        {
+            _selectedLedControls = _ledControls.Where(x => x.IsSelected).ToList();
+            foreach (var ledControl in _selectedLedControls)
+            {
+                UniversPanel.Controls.Remove(ledControl);
+            }
+        }
+
+        private void UniversPanel_Click(object sender, EventArgs e)
+        {
+            foreach (var ledControl in _ledControls)
+            {
+                ledControl.SetSelected(false);
             }
         }
     }
