@@ -32,8 +32,6 @@
             this.NameGroupLabel = new MetroFramework.Controls.MetroLabel();
             this.NameGroupText = new MetroFramework.Controls.MetroTextBox();
             this.SceneLabel = new MetroFramework.Controls.MetroLabel();
-            this.AnimationPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.AnimationLabel = new MetroFramework.Controls.MetroLabel();
             this.LedPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.LedLabel = new MetroFramework.Controls.MetroLabel();
             this.AddLedButton = new MetroFramework.Controls.MetroButton();
@@ -69,6 +67,9 @@
             this.LedContextMenu = new MetroFramework.Controls.MetroContextMenu(this.components);
             this.DeleteLedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteGroupButton = new System.Windows.Forms.PictureBox();
+            this.AnimationTabPage = new MetroFramework.Controls.MetroTabPage();
+            this.AnimationPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.AnimationLabel = new MetroFramework.Controls.MetroLabel();
             this.LedGroupTabControl.SuspendLayout();
             this.LedTabPage.SuspendLayout();
             this.SceneTabPage.SuspendLayout();
@@ -85,11 +86,13 @@
             this.AnimationContextMenu.SuspendLayout();
             this.LedContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DeleteGroupButton)).BeginInit();
+            this.AnimationTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // NameGroupLabel
             // 
             this.NameGroupLabel.AutoSize = true;
+            this.NameGroupLabel.Enabled = false;
             this.NameGroupLabel.FontSize = MetroFramework.MetroLabelSize.Small;
             this.NameGroupLabel.Location = new System.Drawing.Point(21, 14);
             this.NameGroupLabel.Name = "NameGroupLabel";
@@ -138,40 +141,21 @@
             this.SceneLabel.TabIndex = 5;
             this.SceneLabel.Text = "Scènes :";
             // 
-            // AnimationPanel
-            // 
-            this.AnimationPanel.AutoScroll = true;
-            this.AnimationPanel.AutoScrollMinSize = new System.Drawing.Size(50, 50);
-            this.AnimationPanel.BackColor = System.Drawing.Color.Transparent;
-            this.AnimationPanel.Location = new System.Drawing.Point(127, 204);
-            this.AnimationPanel.Name = "AnimationPanel";
-            this.AnimationPanel.Size = new System.Drawing.Size(441, 117);
-            this.AnimationPanel.TabIndex = 9;
-            // 
-            // AnimationLabel
-            // 
-            this.AnimationLabel.AutoSize = true;
-            this.AnimationLabel.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.AnimationLabel.Location = new System.Drawing.Point(14, 235);
-            this.AnimationLabel.Name = "AnimationLabel";
-            this.AnimationLabel.Size = new System.Drawing.Size(69, 15);
-            this.AnimationLabel.TabIndex = 8;
-            this.AnimationLabel.Text = "Animations :";
-            // 
             // LedPanel
             // 
             this.LedPanel.AutoScroll = true;
             this.LedPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.LedPanel.Location = new System.Drawing.Point(126, 21);
             this.LedPanel.Name = "LedPanel";
-            this.LedPanel.Size = new System.Drawing.Size(491, 307);
+            this.LedPanel.Size = new System.Drawing.Size(491, 153);
             this.LedPanel.TabIndex = 11;
             // 
             // LedLabel
             // 
             this.LedLabel.AutoSize = true;
+            this.LedLabel.Enabled = false;
             this.LedLabel.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.LedLabel.Location = new System.Drawing.Point(13, 52);
+            this.LedLabel.Location = new System.Drawing.Point(14, 91);
             this.LedLabel.Name = "LedLabel";
             this.LedLabel.Size = new System.Drawing.Size(36, 15);
             this.LedLabel.TabIndex = 10;
@@ -191,12 +175,14 @@
             // 
             this.LedGroupTabControl.Controls.Add(this.LedTabPage);
             this.LedGroupTabControl.Controls.Add(this.SceneTabPage);
+            this.LedGroupTabControl.Controls.Add(this.AnimationTabPage);
             this.LedGroupTabControl.Location = new System.Drawing.Point(3, 55);
             this.LedGroupTabControl.Name = "LedGroupTabControl";
-            this.LedGroupTabControl.SelectedIndex = 0;
+            this.LedGroupTabControl.SelectedIndex = 1;
             this.LedGroupTabControl.Size = new System.Drawing.Size(1191, 861);
             this.LedGroupTabControl.TabIndex = 13;
             this.LedGroupTabControl.UseSelectable = true;
+            this.LedGroupTabControl.Click += new System.EventHandler(this.LedGroupTabControl_Click);
             // 
             // LedTabPage
             // 
@@ -213,14 +199,13 @@
             this.LedTabPage.VerticalScrollbarBarColor = true;
             this.LedTabPage.VerticalScrollbarHighlightOnWheel = false;
             this.LedTabPage.VerticalScrollbarSize = 10;
+            this.LedTabPage.Click += new System.EventHandler(this.LedTabPage_Click);
             // 
             // SceneTabPage
             // 
             this.SceneTabPage.Controls.Add(this.AddAnimationButton);
             this.SceneTabPage.Controls.Add(this.PlayPauseButton);
-            this.SceneTabPage.Controls.Add(this.AnimationPanel);
             this.SceneTabPage.Controls.Add(this.SceneLabel);
-            this.SceneTabPage.Controls.Add(this.AnimationLabel);
             this.SceneTabPage.Controls.Add(this.SceneTabControl);
             this.SceneTabPage.HorizontalScrollbarBarColor = true;
             this.SceneTabPage.HorizontalScrollbarHighlightOnWheel = false;
@@ -229,7 +214,7 @@
             this.SceneTabPage.Name = "SceneTabPage";
             this.SceneTabPage.Size = new System.Drawing.Size(1183, 819);
             this.SceneTabPage.TabIndex = 1;
-            this.SceneTabPage.Text = "Liste des scènes et animations";
+            this.SceneTabPage.Text = "Liste des scènes";
             this.SceneTabPage.VerticalScrollbarBarColor = true;
             this.SceneTabPage.VerticalScrollbarHighlightOnWheel = false;
             this.SceneTabPage.VerticalScrollbarSize = 10;
@@ -238,7 +223,7 @@
             // 
             this.AddAnimationButton.BackgroundImage = global::HLight.Properties.Resources.Add;
             this.AddAnimationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.AddAnimationButton.Location = new System.Drawing.Point(575, 68);
+            this.AddAnimationButton.Location = new System.Drawing.Point(608, 67);
             this.AddAnimationButton.Name = "AddAnimationButton";
             this.AddAnimationButton.Size = new System.Drawing.Size(40, 40);
             this.AddAnimationButton.TabIndex = 12;
@@ -250,7 +235,7 @@
             // 
             this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Play;
             this.PlayPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PlayPauseButton.Location = new System.Drawing.Point(575, 22);
+            this.PlayPauseButton.Location = new System.Drawing.Point(608, 21);
             this.PlayPauseButton.Name = "PlayPauseButton";
             this.PlayPauseButton.Size = new System.Drawing.Size(40, 40);
             this.PlayPauseButton.TabIndex = 10;
@@ -269,10 +254,10 @@
             this.SceneTabControl.Controls.Add(this.Bank8);
             this.SceneTabControl.FontSize = MetroFramework.MetroTabControlSize.Small;
             this.SceneTabControl.HotTrack = true;
-            this.SceneTabControl.Location = new System.Drawing.Point(127, 22);
+            this.SceneTabControl.Location = new System.Drawing.Point(126, 21);
             this.SceneTabControl.Name = "SceneTabControl";
             this.SceneTabControl.SelectedIndex = 0;
-            this.SceneTabControl.Size = new System.Drawing.Size(442, 164);
+            this.SceneTabControl.Size = new System.Drawing.Size(476, 153);
             this.SceneTabControl.TabIndex = 11;
             this.SceneTabControl.UseSelectable = true;
             // 
@@ -286,7 +271,7 @@
             this.Bank1.HorizontalScrollbarSize = 10;
             this.Bank1.Location = new System.Drawing.Point(4, 34);
             this.Bank1.Name = "Bank1";
-            this.Bank1.Size = new System.Drawing.Size(434, 126);
+            this.Bank1.Size = new System.Drawing.Size(468, 115);
             this.Bank1.TabIndex = 0;
             this.Bank1.Text = "1";
             this.Bank1.VerticalScrollbar = true;
@@ -301,7 +286,7 @@
             this.BankPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel1.Location = new System.Drawing.Point(0, 0);
             this.BankPanel1.Name = "BankPanel1";
-            this.BankPanel1.Size = new System.Drawing.Size(408, 0);
+            this.BankPanel1.Size = new System.Drawing.Size(468, 0);
             this.BankPanel1.TabIndex = 2;
             // 
             // Bank2
@@ -563,6 +548,42 @@
             this.DeleteGroupButton.TabStop = false;
             this.DeleteGroupButton.Click += new System.EventHandler(this.DeleteGroupButton_Click);
             // 
+            // AnimationTabPage
+            // 
+            this.AnimationTabPage.Controls.Add(this.AnimationPanel);
+            this.AnimationTabPage.Controls.Add(this.AnimationLabel);
+            this.AnimationTabPage.HorizontalScrollbarBarColor = true;
+            this.AnimationTabPage.HorizontalScrollbarHighlightOnWheel = false;
+            this.AnimationTabPage.HorizontalScrollbarSize = 10;
+            this.AnimationTabPage.Location = new System.Drawing.Point(4, 38);
+            this.AnimationTabPage.Name = "AnimationTabPage";
+            this.AnimationTabPage.Size = new System.Drawing.Size(1183, 819);
+            this.AnimationTabPage.TabIndex = 2;
+            this.AnimationTabPage.Text = "Liste des animations";
+            this.AnimationTabPage.VerticalScrollbarBarColor = true;
+            this.AnimationTabPage.VerticalScrollbarHighlightOnWheel = false;
+            this.AnimationTabPage.VerticalScrollbarSize = 10;
+            // 
+            // AnimationPanel
+            // 
+            this.AnimationPanel.AutoScroll = true;
+            this.AnimationPanel.AutoScrollMinSize = new System.Drawing.Size(50, 50);
+            this.AnimationPanel.BackColor = System.Drawing.Color.Transparent;
+            this.AnimationPanel.Location = new System.Drawing.Point(126, 21);
+            this.AnimationPanel.Name = "AnimationPanel";
+            this.AnimationPanel.Size = new System.Drawing.Size(491, 153);
+            this.AnimationPanel.TabIndex = 11;
+            // 
+            // AnimationLabel
+            // 
+            this.AnimationLabel.AutoSize = true;
+            this.AnimationLabel.FontSize = MetroFramework.MetroLabelSize.Small;
+            this.AnimationLabel.Location = new System.Drawing.Point(14, 90);
+            this.AnimationLabel.Name = "AnimationLabel";
+            this.AnimationLabel.Size = new System.Drawing.Size(69, 15);
+            this.AnimationLabel.TabIndex = 10;
+            this.AnimationLabel.Text = "Animations :";
+            // 
             // HGroupControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -574,7 +595,8 @@
             this.Controls.Add(this.NameGroupLabel);
             this.Controls.Add(this.NameGroupText);
             this.Name = "HGroupControl";
-            this.Size = new System.Drawing.Size(665, 498);
+            this.Size = new System.Drawing.Size(665, 304);
+            this.Click += new System.EventHandler(this.HGroupControl_Click);
             this.LedGroupTabControl.ResumeLayout(false);
             this.LedTabPage.ResumeLayout(false);
             this.LedTabPage.PerformLayout();
@@ -601,6 +623,8 @@
             this.AnimationContextMenu.ResumeLayout(false);
             this.LedContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DeleteGroupButton)).EndInit();
+            this.AnimationTabPage.ResumeLayout(false);
+            this.AnimationTabPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -610,8 +634,6 @@
 
         private MetroFramework.Controls.MetroLabel NameGroupLabel;
         private MetroFramework.Controls.MetroLabel SceneLabel;
-        private System.Windows.Forms.FlowLayoutPanel AnimationPanel;
-        private MetroFramework.Controls.MetroLabel AnimationLabel;
         private System.Windows.Forms.FlowLayoutPanel LedPanel;
         private MetroFramework.Controls.MetroLabel LedLabel;
         private MetroFramework.Controls.MetroButton AddLedButton;
@@ -622,7 +644,6 @@
         public MetroFramework.Controls.MetroTextBox NameGroupText;
         private MetroFramework.Controls.MetroButton PlayPauseButton;
         public System.Windows.Forms.Timer TimerSpeed;
-        private MetroFramework.Controls.MetroTabControl SceneTabControl;
         private MetroFramework.Controls.MetroTabPage Bank1;
         private MetroFramework.Controls.MetroTabPage Bank2;
         private MetroFramework.Controls.MetroTabPage Bank3;
@@ -648,5 +669,9 @@
         private MetroFramework.Controls.MetroContextMenu LedContextMenu;
         private System.Windows.Forms.ToolStripMenuItem DeleteLedMenuItem;
         private System.Windows.Forms.PictureBox DeleteGroupButton;
+        private MetroFramework.Controls.MetroTabPage AnimationTabPage;
+        private System.Windows.Forms.FlowLayoutPanel AnimationPanel;
+        private MetroFramework.Controls.MetroLabel AnimationLabel;
+        public MetroFramework.Controls.MetroTabControl SceneTabControl;
     }
 }

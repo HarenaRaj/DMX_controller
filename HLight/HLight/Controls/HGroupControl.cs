@@ -11,6 +11,8 @@ namespace HLight.Controls
         public List<HLedControl> SelectedLedControls { get; set; }
         public List<HLedControl> LedControls { get; set; }
         public Group Group { get; set; }
+        public MetroFramework.Controls.MetroPanel GroupCommandPanel { get; set; }
+        public bool IsSelected { get; set; }
 
         public List<Animation> Animations { get; set; }
 
@@ -46,6 +48,29 @@ namespace HLight.Controls
             _groupControls = groupControls;
             _channelMasterSpeedBar = channelMasterSpeedBar;
             _channelFaderBar = channelFaderBar;
+        }
+
+        public void ChangeSceneChannel(Scene scene)
+        {
+            foreach (var ledControl in LedControls)
+            {
+                var currentLed = scene.Leds.Where(x => x.Key == ledControl.Led.Key).FirstOrDefault();
+                if (currentLed != null)
+                {
+                    foreach (var currentChannel in currentLed.Channels)
+                    {
+                        var channel = ledControl.Led.Channels.Where(x => x.Type == currentChannel.Type).FirstOrDefault();
+                        channel.Value = currentChannel.Value;
+                    }
+                }
+                else
+                {
+                    foreach (var channel in ledControl.Led.Channels)
+                    {
+                        channel.Value = 0;
+                    }
+                }
+            }
         }
 
         private void AddLedButton_Click(object sender, EventArgs e)
@@ -98,7 +123,7 @@ namespace HLight.Controls
             else
             {
                 LedGroupTabControl.SelectedIndex = 1;
-
+                
                 ScenePage scenePage;
                 if (Group.ScenePages.Any(x => x.Name == SceneTabControl.SelectedTab.Name))
                 {
@@ -176,44 +201,42 @@ namespace HLight.Controls
             else
             {
                 var sceneButton = (HSceneButton)sender;
-                changeSceneChannel(sceneButton.Scene);
-            }
-        }
-
-        private void changeSceneChannel(Scene scene)
-        {
-            foreach (var ledControl in LedControls)
-            {
-                var currentLed = scene.Leds.Where(x => x.Key == ledControl.Led.Key).FirstOrDefault();
-                if (currentLed != null)
-                {
-                    foreach (var currentChannel in currentLed.Channels)
-                    {
-                        var channel = ledControl.Led.Channels.Where(x => x.Type == currentChannel.Type).FirstOrDefault();
-                        channel.Value = currentChannel.Value;
-                    }
-                }
-                else
-                {
-                    foreach (var channel in ledControl.Led.Channels)
-                    {
-                        channel.Value = 0;
-                    }
-                }
+                ChangeSceneChannel(sceneButton.Scene);
             }
         }
 
         private void startAutoScene()
         {
             this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Pause;
+            GroupCommandPanel.Visible = true;
             TimerSpeed.Start();
             TimerAnimation.Stop();
         }
 
-        private void pauseAutoScene()
+        public void PauseAutoScene()
         {
             TimerSpeed.Stop();
             this.PlayPauseButton.BackgroundImage = global::HLight.Properties.Resources.Play;
+        }
+
+        public void SelectGroup(bool selelct)
+        {
+            this.IsSelected = selelct;
+            if (this.IsSelected)
+            {
+                this.BorderStyle = BorderStyle.Fixed3D;
+                foreach (var groupControl in _groupControls)
+                {
+                    if (this != groupControl)
+                    {
+                        groupControl.SelectGroup(false);
+                    }
+                }
+            }
+            else
+            {
+                this.BorderStyle = BorderStyle.None;
+            }
         }
 
         private void PlayPauseButton_Click(object sender, EventArgs e)
@@ -237,7 +260,7 @@ namespace HLight.Controls
                 }
                 else
                 {
-                    pauseAutoScene();
+                    PauseAutoScene();
                 }
             }
         }
@@ -246,12 +269,13 @@ namespace HLight.Controls
         {
             if (_iAuto >= _currentPanel.Controls.Count) _iAuto = 0;
             var sceneControl = (HSceneButton)_currentPanel.Controls[_iAuto];
-            changeSceneChannel(sceneControl.Scene);
+            ChangeSceneChannel(sceneControl.Scene);
             _iAuto++;
         }
 
         private void AddAnimationButton_Click(object sender, EventArgs e)
         {
+            LedGroupTabControl.SelectedIndex = 2;
             var currentIndex = SceneTabControl.SelectedIndex;
             var scenePage = Group.ScenePages[currentIndex];
             var lastAnimation = Animations.LastOrDefault();
@@ -262,6 +286,7 @@ namespace HLight.Controls
             {
                 Name = index.ToString(),
                 Scenes = scenePage.Scenes,
+                Order = index,
                 Fader = _channelFaderBar.ChannelTrackBar.Value,
                 Speed = _channelMasterSpeedBar.ChannelTrackBar.Value,
             };
@@ -286,38 +311,43 @@ namespace HLight.Controls
             }
             else
             {
-                var animation = buttonAnimation.Animation;
-                if (_currentAnimation == animation)
-                {
-                    _isPlayAnimation = !_isPlayAnimation;
-                }
-                else
-                {
-                    _currentAnimation = animation;
-                    _isPlayAnimation = true;
-                }
-
-                if (_isPlayAnimation)
-                {
-                    _iAutoAnimation = 0;
-                    TimerAnimation.Interval = Math.Abs(animation.Speed - _channelMasterSpeedBar.ChannelTrackBar.Maximum - _channelMasterSpeedBar.ChannelTrackBar.Minimum);
-
-                    foreach (var ledControl in LedControls)
-                    {
-                        ledControl.TimerFader.Interval = animation.Fader;
-                    }
-
-                    TimerAnimation.Start();
-                    pauseAutoScene();
-                }
-                else TimerAnimation.Stop();
+                PlayPauseAnimation(buttonAnimation.Animation);
             }
+        }
+
+        public void PlayPauseAnimation(Animation animation)
+        {
+            if (_currentAnimation == animation)
+            {
+                _isPlayAnimation = !_isPlayAnimation;
+            }
+            else
+            {
+                _currentAnimation = animation;
+                _isPlayAnimation = true;
+            }
+
+            if (_isPlayAnimation)
+            {
+                _iAutoAnimation = 0;
+                TimerAnimation.Interval = Math.Abs(animation.Speed - _channelMasterSpeedBar.ChannelTrackBar.Maximum - _channelMasterSpeedBar.ChannelTrackBar.Minimum);
+
+                foreach (var ledControl in LedControls)
+                {
+                    ledControl.TimerFader.Interval = animation.Fader;
+                }
+
+                GroupCommandPanel.Visible = true;
+                TimerAnimation.Start();
+                PauseAutoScene();
+            }
+            else TimerAnimation.Stop();
         }
 
         private void TimerAnimation_Tick(object sender, EventArgs e)
         {
             if (_iAutoAnimation >= _currentAnimation.Scenes.Count) _iAutoAnimation = 0;
-            changeSceneChannel(_currentAnimation.Scenes[_iAutoAnimation]);
+            ChangeSceneChannel(_currentAnimation.Scenes[_iAutoAnimation]);
             _iAutoAnimation++;
         }
 
@@ -346,6 +376,21 @@ namespace HLight.Controls
         {
             this.Parent.Controls.Remove(this);
             this._groupControls.Remove(this);
+        }
+
+        private void HGroupControl_Click(object sender, EventArgs e)
+        {
+            SelectGroup(true);
+        }
+
+        private void LedGroupTabControl_Click(object sender, EventArgs e)
+        {
+            HGroupControl_Click(sender, e);
+        }
+
+        private void LedTabPage_Click(object sender, EventArgs e)
+        {
+            HGroupControl_Click(sender, e);
         }
     }
 }
