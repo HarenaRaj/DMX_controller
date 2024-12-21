@@ -48,7 +48,7 @@ namespace HLight
             }
             this.LebBox.Image = setImageByType(this.Led.StoreLed.Type);
             this.NameLabel.Text = led.Name;
-            ChangeChannel(1);
+            ChangeChannel(led.ChannelBegin);
         }
 
         public void ChangeName(string newName)

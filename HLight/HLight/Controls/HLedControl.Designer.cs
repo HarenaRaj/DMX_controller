@@ -61,6 +61,7 @@ namespace HLight
             this.NameLabel.BackColor = System.Drawing.Color.Transparent;
             this.NameLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.NameLabel.FontSize = MetroFramework.MetroLabelSize.Small;
+            this.NameLabel.FontWeight = MetroFramework.MetroLabelWeight.Bold;
             this.NameLabel.Location = new System.Drawing.Point(0, 138);
             this.NameLabel.Name = "NameLabel";
             this.NameLabel.Size = new System.Drawing.Size(133, 46);

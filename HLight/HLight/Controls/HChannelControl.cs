@@ -1,5 +1,6 @@
 ﻿using HLight.Controls;
 using HLight.Enums;
+using HLight.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,13 @@ namespace HLight.Forms
 
         private HTrackBar _channelBar;
 
+        private LedRepository _ledRepository;
+
         public HChannelControl()
         {
             InitializeComponent();
             _channelBars = new List<HTrackBar>();
+            _ledRepository = LedRepository.GetInstance();
         }
 
         public HChannelControl(List<HLedControl> ledControls, 
@@ -102,7 +106,7 @@ namespace HLight.Forms
 
             if (selectedLedControls.Count > 0)
             {
-                for (int i = 0; i < SelectedLedControls.Last().Led.StoreLed.Channels.Count; i++)
+                for (int i = 0; i < SelectedLedControls.Last().Led.Channels.Count; i++)
                 {
                     _channelBar = _channelBars.FirstOrDefault(x => x.Type == LedControls.Last().Led.Channels[i].Type);
                     if (_channelBar == null)
@@ -113,7 +117,7 @@ namespace HLight.Forms
                     _channelBar.Location = new System.Drawing.Point(310 + (80 * i), 55);
                     _channelBar.Name = SelectedLedControls.Last().Led.Channels[i].Type.ToString();
                     _channelBar.AutoSize = false;
-                    _channelBar.ChannelLabel.Text = ChanneTypeString.GetString(SelectedLedControls.Last().Led.StoreLed.Channels[i].Type);
+                    _channelBar.ChannelLabel.Text = ChanneTypeString.GetString(SelectedLedControls.Last().Led.Channels[i].Type);
                     _channelBar.Type = SelectedLedControls.Last().Led.Channels[i].Type;
                     _channelBar.Id = SelectedLedControls.Last().Led.Key;
                     _channelBar.ChannelTrackBar.ValueChanged += new EventHandler(ChannelTrackBar_ValueChanged);
@@ -175,6 +179,7 @@ namespace HLight.Forms
             if (SelectedLedControls.Count == 1)
             {
                 SelectedLedControls.First().ChangeName(NameText.Text);
+                _ledRepository.UpdateName(SelectedLedControls[0].Led.Key, NameText.Text);
             }
         }
 
@@ -184,6 +189,11 @@ namespace HLight.Forms
             {
                 SelectedLedControls.First().ChangeChannel((int)ChannelNumeric.Value);
             }
+        }
+
+        private void ChannelNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            _ledRepository.UpdateChannelNumber(SelectedLedControls[0].Led.Key, (int)ChannelNumeric.Value);
         }
     }
 }

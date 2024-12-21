@@ -28,6 +28,7 @@ namespace HLight.Repositories
 
         public List<StoreLed> GetStoreLeds()
         {
+            
             var command = new MySqlCommand(@"
                 SELECT 
                     sl.id AS LedId, sl.name, sl.number_channel, sl.type AS LedType,
@@ -67,6 +68,7 @@ namespace HLight.Repositories
                 }
             }
             reader.Close();
+            
             return storeLeds;
         }
     }

@@ -52,6 +52,8 @@ namespace HLight
         //};
         private List<StoreLed> _storeLeds;
 
+        private List<Led> _leds;
+
         private List<HLedControl> _ledControls = new List<HLedControl>();
 
         private List<HLedControl> _selectedLedControls = new List<HLedControl>();
@@ -62,15 +64,24 @@ namespace HLight
 
         private StoreLedRepository _storeLedRepository;
         private LedRepository _ledRepository;
+        private Universe _universe;
+        private bool _ledIsMove = false;
         public ControlForm()
         {
             InitializeComponent();
 
             this.KeyPreview = true;
 
+            _universe = UniverseRepository.GetInstance().GetStoreUniverse(1);
             _ledRepository = LedRepository.GetInstance();
             _storeLedRepository = StoreLedRepository.GetInstance();
             _storeLeds = _storeLedRepository.GetStoreLeds();
+            _leds = _ledRepository.GetLedsByUniverseId(_universe.Id);
+
+            _channelControl = new HChannelControl(_ledControls, _selectedLedControls, _groupControls);
+            _channelControl.Visible = false;
+            _channelControl.Dock = DockStyle.Bottom;
+            UniversePanel.Controls.Add(_channelControl);
 
             foreach (var led in _storeLeds)
             {
@@ -81,12 +92,16 @@ namespace HLight
                 lebBox.MouseDown += this.ledBox_Click;
                 this.LedPanel.Controls.Add(lebBox);
             }
+
+            foreach (var led in _leds)
+            {
+                insertLedInUniverseControl(led);
+            }
         }
 
         private void ledBox_Click(object sender, MouseEventArgs e)
         {
             var ledControl = (HStoreLedControl) sender;
-            var controlCount = this.UniversePanel.Controls.Count;
             var existLedControls = this.UniversePanel.Controls.OfType<HLedControl>().Where(x => x.Led.StoreLed.Type == ledControl.Led.Type);
             var newLed = new Led()
             {
@@ -94,6 +109,8 @@ namespace HLight
                 ChannelBegin = 1,
                 Name = $"{ledControl.Led.Name} {existLedControls.Count() + 1}",
                 StoreLed = ledControl.Led,
+                StoreLedId = ledControl.Led.Id,
+                UniverseId = _universe.Id,
                 Channels = new List<LedChannel>()
             };
 
@@ -108,17 +125,44 @@ namespace HLight
                 newLed.Channels.Add(newChannel);
             }
 
-            var newLedControl = new HLedControl(newLed);
+            _ledRepository.InsertLed(newLed);
+
+            insertLedInUniverseControl(newLed);
+        }
+
+        private void insertLedInUniverseControl(Led led)
+        {
+            var controlCount = this.UniversePanel.Controls.Count;
+
+            var newLedControl = new HLedControl(led);
             newLedControl.Size = new Size(80, 120);
             newLedControl.Cursor = Cursors.Hand;
-            newLedControl.Location = new Point(newLedControl.Size.Width * controlCount);
-            newLedControl.MouseDown += this.ledControl_Click;
+            newLedControl.Location = new Point(led.PositionX, led.PositionY);
+            newLedControl.MouseDown += NewLedControl_MouseDown;
+            newLedControl.MouseUp += NewLedControl_MouseUp;
+            newLedControl.Move += NewLedControl_Move;
             ControlExtension.Draggable(newLedControl, true);
+
             _ledControls.Add(newLedControl);
             this.UniversePanel.Controls.Add(newLedControl);
         }
 
-        private void ledControl_Click(object sender, MouseEventArgs e)
+        private void NewLedControl_MouseUp(object sender, MouseEventArgs e)
+        {
+            var ledControl = (HLedControl)sender;
+            if (_ledIsMove)
+            {
+                _ledIsMove= false;
+                _ledRepository.UpdatePosition(ledControl.Led.Key, ledControl.Location.X, ledControl.Location.Y);
+            }
+        }
+
+        private void NewLedControl_Move(object sender, EventArgs e)
+        {
+            _ledIsMove = true;
+        }
+
+        private void NewLedControl_MouseDown(object sender, MouseEventArgs e)
         {
             var ledControl = (HLedControl)sender;
             var currentLed = _ledControls.Where(x => x.Led.Key == ledControl.Led.Key).FirstOrDefault();
@@ -155,8 +199,17 @@ namespace HLight
                 {
                     _channelControl.Init(_ledControls, _selectedLedControls, _groupControls);
                 }
-                _channelControl.Dock = DockStyle.Bottom;
-                UniversePanel.Controls.Add(_channelControl);
+
+                if (_selectedLedControls.Count > 1)
+                {
+                    _channelControl.LedInfoPanel.Visible = false;
+                }
+                else
+                {
+                    _channelControl.LedInfoPanel.Visible = true;
+                }
+
+                _channelControl.Visible = true;
                 GroupParentPanel.Show();
             }
         }
@@ -198,6 +251,7 @@ namespace HLight
             foreach (var ledControl in _selectedLedControls)
             {
                 UniversePanel.Controls.Remove(ledControl);
+                _ledRepository.DeleteLed(ledControl.Led.Key);
             }
         }
 

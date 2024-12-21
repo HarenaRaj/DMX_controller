@@ -57,6 +57,9 @@
             this.BankPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.Bank8 = new MetroFramework.Controls.MetroTabPage();
             this.BankPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.AnimationTabPage = new MetroFramework.Controls.MetroTabPage();
+            this.AnimationPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.AnimationLabel = new MetroFramework.Controls.MetroLabel();
             this.AddSceneButton = new MetroFramework.Controls.MetroButton();
             this.TimerSpeed = new System.Windows.Forms.Timer(this.components);
             this.TimerAnimation = new System.Windows.Forms.Timer(this.components);
@@ -67,9 +70,6 @@
             this.LedContextMenu = new MetroFramework.Controls.MetroContextMenu(this.components);
             this.DeleteLedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteGroupButton = new System.Windows.Forms.PictureBox();
-            this.AnimationTabPage = new MetroFramework.Controls.MetroTabPage();
-            this.AnimationPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.AnimationLabel = new MetroFramework.Controls.MetroLabel();
             this.LedGroupTabControl.SuspendLayout();
             this.LedTabPage.SuspendLayout();
             this.SceneTabPage.SuspendLayout();
@@ -82,11 +82,11 @@
             this.Bank6.SuspendLayout();
             this.Bank7.SuspendLayout();
             this.Bank8.SuspendLayout();
+            this.AnimationTabPage.SuspendLayout();
             this.SceneContextMenu.SuspendLayout();
             this.AnimationContextMenu.SuspendLayout();
             this.LedContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DeleteGroupButton)).BeginInit();
-            this.AnimationTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // NameGroupLabel
@@ -297,7 +297,7 @@
             this.Bank2.HorizontalScrollbarSize = 10;
             this.Bank2.Location = new System.Drawing.Point(4, 34);
             this.Bank2.Name = "Bank2";
-            this.Bank2.Size = new System.Drawing.Size(434, 126);
+            this.Bank2.Size = new System.Drawing.Size(468, 115);
             this.Bank2.TabIndex = 1;
             this.Bank2.Text = "2";
             this.Bank2.VerticalScrollbar = true;
@@ -312,7 +312,7 @@
             this.BankPanel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel2.Location = new System.Drawing.Point(0, 0);
             this.BankPanel2.Name = "BankPanel2";
-            this.BankPanel2.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel2.Size = new System.Drawing.Size(468, 0);
             this.BankPanel2.TabIndex = 3;
             // 
             // Bank3
@@ -323,7 +323,7 @@
             this.Bank3.HorizontalScrollbarSize = 10;
             this.Bank3.Location = new System.Drawing.Point(4, 34);
             this.Bank3.Name = "Bank3";
-            this.Bank3.Size = new System.Drawing.Size(434, 126);
+            this.Bank3.Size = new System.Drawing.Size(468, 115);
             this.Bank3.TabIndex = 2;
             this.Bank3.Text = "3";
             this.Bank3.VerticalScrollbar = true;
@@ -338,7 +338,7 @@
             this.BankPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel3.Location = new System.Drawing.Point(0, 0);
             this.BankPanel3.Name = "BankPanel3";
-            this.BankPanel3.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel3.Size = new System.Drawing.Size(468, 0);
             this.BankPanel3.TabIndex = 3;
             // 
             // Bank4
@@ -349,7 +349,7 @@
             this.Bank4.HorizontalScrollbarSize = 10;
             this.Bank4.Location = new System.Drawing.Point(4, 34);
             this.Bank4.Name = "Bank4";
-            this.Bank4.Size = new System.Drawing.Size(434, 126);
+            this.Bank4.Size = new System.Drawing.Size(468, 115);
             this.Bank4.TabIndex = 3;
             this.Bank4.Text = "4";
             this.Bank4.VerticalScrollbar = true;
@@ -364,7 +364,7 @@
             this.BankPanel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel4.Location = new System.Drawing.Point(0, 0);
             this.BankPanel4.Name = "BankPanel4";
-            this.BankPanel4.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel4.Size = new System.Drawing.Size(468, 0);
             this.BankPanel4.TabIndex = 3;
             // 
             // Bank5
@@ -375,7 +375,7 @@
             this.Bank5.HorizontalScrollbarSize = 10;
             this.Bank5.Location = new System.Drawing.Point(4, 34);
             this.Bank5.Name = "Bank5";
-            this.Bank5.Size = new System.Drawing.Size(434, 126);
+            this.Bank5.Size = new System.Drawing.Size(468, 115);
             this.Bank5.TabIndex = 4;
             this.Bank5.Text = "5";
             this.Bank5.VerticalScrollbar = true;
@@ -390,7 +390,7 @@
             this.BankPanel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel5.Location = new System.Drawing.Point(0, 0);
             this.BankPanel5.Name = "BankPanel5";
-            this.BankPanel5.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel5.Size = new System.Drawing.Size(468, 0);
             this.BankPanel5.TabIndex = 3;
             // 
             // Bank6
@@ -403,7 +403,7 @@
             this.Bank6.HorizontalScrollbarSize = 10;
             this.Bank6.Location = new System.Drawing.Point(4, 34);
             this.Bank6.Name = "Bank6";
-            this.Bank6.Size = new System.Drawing.Size(434, 126);
+            this.Bank6.Size = new System.Drawing.Size(468, 115);
             this.Bank6.TabIndex = 5;
             this.Bank6.Text = "6";
             this.Bank6.VerticalScrollbar = true;
@@ -418,7 +418,7 @@
             this.BankPanel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel6.Location = new System.Drawing.Point(0, 0);
             this.BankPanel6.Name = "BankPanel6";
-            this.BankPanel6.Size = new System.Drawing.Size(408, 0);
+            this.BankPanel6.Size = new System.Drawing.Size(442, 0);
             this.BankPanel6.TabIndex = 3;
             // 
             // Bank7
@@ -429,7 +429,7 @@
             this.Bank7.HorizontalScrollbarSize = 10;
             this.Bank7.Location = new System.Drawing.Point(4, 34);
             this.Bank7.Name = "Bank7";
-            this.Bank7.Size = new System.Drawing.Size(434, 126);
+            this.Bank7.Size = new System.Drawing.Size(468, 115);
             this.Bank7.TabIndex = 6;
             this.Bank7.Text = "7";
             this.Bank7.VerticalScrollbar = true;
@@ -444,7 +444,7 @@
             this.BankPanel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel7.Location = new System.Drawing.Point(0, 0);
             this.BankPanel7.Name = "BankPanel7";
-            this.BankPanel7.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel7.Size = new System.Drawing.Size(468, 0);
             this.BankPanel7.TabIndex = 3;
             // 
             // Bank8
@@ -455,7 +455,7 @@
             this.Bank8.HorizontalScrollbarSize = 10;
             this.Bank8.Location = new System.Drawing.Point(4, 34);
             this.Bank8.Name = "Bank8";
-            this.Bank8.Size = new System.Drawing.Size(434, 126);
+            this.Bank8.Size = new System.Drawing.Size(468, 115);
             this.Bank8.TabIndex = 7;
             this.Bank8.Text = "8";
             this.Bank8.VerticalScrollbar = true;
@@ -470,8 +470,44 @@
             this.BankPanel8.Dock = System.Windows.Forms.DockStyle.Top;
             this.BankPanel8.Location = new System.Drawing.Point(0, 0);
             this.BankPanel8.Name = "BankPanel8";
-            this.BankPanel8.Size = new System.Drawing.Size(434, 0);
+            this.BankPanel8.Size = new System.Drawing.Size(468, 0);
             this.BankPanel8.TabIndex = 3;
+            // 
+            // AnimationTabPage
+            // 
+            this.AnimationTabPage.Controls.Add(this.AnimationPanel);
+            this.AnimationTabPage.Controls.Add(this.AnimationLabel);
+            this.AnimationTabPage.HorizontalScrollbarBarColor = true;
+            this.AnimationTabPage.HorizontalScrollbarHighlightOnWheel = false;
+            this.AnimationTabPage.HorizontalScrollbarSize = 10;
+            this.AnimationTabPage.Location = new System.Drawing.Point(4, 38);
+            this.AnimationTabPage.Name = "AnimationTabPage";
+            this.AnimationTabPage.Size = new System.Drawing.Size(1183, 819);
+            this.AnimationTabPage.TabIndex = 2;
+            this.AnimationTabPage.Text = "Liste des animations";
+            this.AnimationTabPage.VerticalScrollbarBarColor = true;
+            this.AnimationTabPage.VerticalScrollbarHighlightOnWheel = false;
+            this.AnimationTabPage.VerticalScrollbarSize = 10;
+            // 
+            // AnimationPanel
+            // 
+            this.AnimationPanel.AutoScroll = true;
+            this.AnimationPanel.AutoScrollMinSize = new System.Drawing.Size(50, 50);
+            this.AnimationPanel.BackColor = System.Drawing.Color.Transparent;
+            this.AnimationPanel.Location = new System.Drawing.Point(126, 21);
+            this.AnimationPanel.Name = "AnimationPanel";
+            this.AnimationPanel.Size = new System.Drawing.Size(491, 153);
+            this.AnimationPanel.TabIndex = 11;
+            // 
+            // AnimationLabel
+            // 
+            this.AnimationLabel.AutoSize = true;
+            this.AnimationLabel.FontSize = MetroFramework.MetroLabelSize.Small;
+            this.AnimationLabel.Location = new System.Drawing.Point(14, 90);
+            this.AnimationLabel.Name = "AnimationLabel";
+            this.AnimationLabel.Size = new System.Drawing.Size(69, 15);
+            this.AnimationLabel.TabIndex = 10;
+            this.AnimationLabel.Text = "Animations :";
             // 
             // AddSceneButton
             // 
@@ -548,42 +584,6 @@
             this.DeleteGroupButton.TabStop = false;
             this.DeleteGroupButton.Click += new System.EventHandler(this.DeleteGroupButton_Click);
             // 
-            // AnimationTabPage
-            // 
-            this.AnimationTabPage.Controls.Add(this.AnimationPanel);
-            this.AnimationTabPage.Controls.Add(this.AnimationLabel);
-            this.AnimationTabPage.HorizontalScrollbarBarColor = true;
-            this.AnimationTabPage.HorizontalScrollbarHighlightOnWheel = false;
-            this.AnimationTabPage.HorizontalScrollbarSize = 10;
-            this.AnimationTabPage.Location = new System.Drawing.Point(4, 38);
-            this.AnimationTabPage.Name = "AnimationTabPage";
-            this.AnimationTabPage.Size = new System.Drawing.Size(1183, 819);
-            this.AnimationTabPage.TabIndex = 2;
-            this.AnimationTabPage.Text = "Liste des animations";
-            this.AnimationTabPage.VerticalScrollbarBarColor = true;
-            this.AnimationTabPage.VerticalScrollbarHighlightOnWheel = false;
-            this.AnimationTabPage.VerticalScrollbarSize = 10;
-            // 
-            // AnimationPanel
-            // 
-            this.AnimationPanel.AutoScroll = true;
-            this.AnimationPanel.AutoScrollMinSize = new System.Drawing.Size(50, 50);
-            this.AnimationPanel.BackColor = System.Drawing.Color.Transparent;
-            this.AnimationPanel.Location = new System.Drawing.Point(126, 21);
-            this.AnimationPanel.Name = "AnimationPanel";
-            this.AnimationPanel.Size = new System.Drawing.Size(491, 153);
-            this.AnimationPanel.TabIndex = 11;
-            // 
-            // AnimationLabel
-            // 
-            this.AnimationLabel.AutoSize = true;
-            this.AnimationLabel.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.AnimationLabel.Location = new System.Drawing.Point(14, 90);
-            this.AnimationLabel.Name = "AnimationLabel";
-            this.AnimationLabel.Size = new System.Drawing.Size(69, 15);
-            this.AnimationLabel.TabIndex = 10;
-            this.AnimationLabel.Text = "Animations :";
-            // 
             // HGroupControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -619,12 +619,12 @@
             this.Bank7.PerformLayout();
             this.Bank8.ResumeLayout(false);
             this.Bank8.PerformLayout();
+            this.AnimationTabPage.ResumeLayout(false);
+            this.AnimationTabPage.PerformLayout();
             this.SceneContextMenu.ResumeLayout(false);
             this.AnimationContextMenu.ResumeLayout(false);
             this.LedContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DeleteGroupButton)).EndInit();
-            this.AnimationTabPage.ResumeLayout(false);
-            this.AnimationTabPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
