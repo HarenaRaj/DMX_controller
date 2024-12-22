@@ -188,6 +188,7 @@
     <Compile Include="Models\Universe.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\LedRepository.cs" />
     <Compile Include="Repositories\UniverseRepository.cs" />
     <Compile Include="Repositories\StoreLedRepository.cs" />

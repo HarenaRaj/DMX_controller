@@ -1,4 +1,6 @@
-﻿using HLight.Models;
+﻿using HLight.Enums;
+using HLight.Models;
+using HLight.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +28,11 @@ namespace HLight.Controls
         private bool _isPlayAnimation = false;
         private int _iAuto = 0;
         private int _iAutoAnimation = 0;
+        private HTrackBar _channelMasterDimmerBar;
         private HTrackBar _channelMasterSpeedBar;
         private HTrackBar _channelFaderBar;
 
+        private GroupRepository _groupRepository;
         public HGroupControl()
         {
             InitializeComponent();
@@ -41,13 +45,17 @@ namespace HLight.Controls
 
         public HGroupControl(List<HLedControl> selectedLedControls,
             List<HGroupControl> groupControls,
-            HTrackBar channelMasterSpeedBar, 
+            HTrackBar channelMasterDimmerBar, 
+            HTrackBar channelMasterSpeedBar,
             HTrackBar channelFaderBar) : this()
         {
             SelectedLedControls = selectedLedControls;
             _groupControls = groupControls;
+            _channelMasterDimmerBar = channelMasterDimmerBar;
             _channelMasterSpeedBar = channelMasterSpeedBar;
             _channelFaderBar = channelFaderBar;
+
+            _groupRepository = GroupRepository.GetInstance();
         }
 
         public void ChangeSceneChannel(Scene scene)
@@ -60,7 +68,14 @@ namespace HLight.Controls
                     foreach (var currentChannel in currentLed.Channels)
                     {
                         var channel = ledControl.Led.Channels.Where(x => x.Type == currentChannel.Type).FirstOrDefault();
-                        channel.Value = currentChannel.Value;
+                        if (channel.Type == ChannelType.Dimmer)
+                        {
+                            channel.Value = currentChannel.Value * _channelMasterDimmerBar.ChannelTrackBar.Value / 255;
+                        }
+                        else
+                        {
+                            channel.Value = currentChannel.Value;
+                        }
                     }
                 }
                 else
@@ -86,22 +101,28 @@ namespace HLight.Controls
                 {
                     if (!LedControls.Contains(led))
                     {
-                        var ledLabel = new HLedLabel();
-                        ledLabel.AutoSize = true;
-                        ledLabel.FontSize = MetroFramework.MetroLabelSize.Small;
-                        ledLabel.Name = led.Led.Name;
-                        ledLabel.Size = new System.Drawing.Size(39, 15);
-                        ledLabel.TabIndex = 4;
-                        ledLabel.Text = led.Led.Name;
-                        ledLabel.UseCustomBackColor = true;
-                        ledLabel.LedControl = led;
-                        ledLabel.MouseDown += LedLabel_Click;
-                        this.LedPanel.Controls.Add(ledLabel);
-                        LedControls.Add(led);
-                        Group.Leds.Add(led.Led);
+                        insertLedInLedPanel(led);
+                        _groupRepository.AddLed(Group.Key, led.Led.Key);
                     }
                 }
             }
+        }
+
+        private void insertLedInLedPanel(HLedControl led)
+        {
+            var ledLabel = new HLedLabel();
+            ledLabel.AutoSize = true;
+            ledLabel.FontSize = MetroFramework.MetroLabelSize.Small;
+            ledLabel.Name = led.Led.Name;
+            ledLabel.Size = new System.Drawing.Size(39, 15);
+            ledLabel.TabIndex = 4;
+            ledLabel.Text = led.Led.Name;
+            ledLabel.UseCustomBackColor = true;
+            ledLabel.LedControl = led;
+            ledLabel.MouseDown += LedLabel_Click;
+            this.LedPanel.Controls.Add(ledLabel);
+            LedControls.Add(led);
+            Group.Leds.Add(led.Led);
         }
 
         private void LedLabel_Click(object sender, MouseEventArgs e)
@@ -292,7 +313,7 @@ namespace HLight.Controls
             };
 
             var buttonAnimation = new HAnimationButton();
-            buttonAnimation.Location = new System.Drawing.Point(((buttonAnimation.Width + 5) * (AnimationPanel.Controls.Count)), 0);
+            buttonAnimation.Location = new System.Drawing.Point((buttonAnimation.Width + 5) * (AnimationPanel.Controls.Count), 0);
             buttonAnimation.Name = animation.Name;
             buttonAnimation.Text = animation.Name;
             buttonAnimation.MouseDown += ButtonAnimation_Click;
@@ -374,6 +395,7 @@ namespace HLight.Controls
 
         private void DeleteGroupButton_Click(object sender, EventArgs e)
         {
+            this._groupRepository.DeleteGroup(Group.Key);
             this.Parent.Controls.Remove(this);
             this._groupControls.Remove(this);
         }
@@ -391,6 +413,11 @@ namespace HLight.Controls
         private void LedTabPage_Click(object sender, EventArgs e)
         {
             HGroupControl_Click(sender, e);
+        }
+
+        private void NameGroupText_TextChanged(object sender, EventArgs e)
+        {
+            _groupRepository.UpdateName(Group.Key, NameGroupText.Text);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace HLight.Repositories
             return _instance;
         }
 
-        public Universe GetStoreUniverse(int id)
+        public Universe GetUniverseById(int id)
         {
             
             var command = new MySqlCommand($@"SELECT * FROM universe where id = {id}", _context.Connection);

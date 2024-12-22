@@ -294,5 +294,35 @@ namespace HLight.Repositories
                 }
             }
         }
+
+        public Led GetLedWithoutChannelByKey(Guid key)
+        {
+            var command = new MySqlCommand(@"
+                SELECT * FROM led where `key` = @Key", _context.Connection);
+
+            command.Parameters.AddWithValue("@Key", key.ToString());
+
+            var reader = command.ExecuteReader();
+            var led = new Led();
+
+            while (reader.Read())
+            {
+                led = new Led
+                {
+                    Id = reader.GetInt32("id"),
+                    Key = Guid.Parse(reader.GetString("key")),
+                    Name = reader.GetString("name"),
+                    ChannelBegin = reader.GetInt32("channel_begin"),
+                    StoreLedId = reader.GetInt32("store_led_id"),
+                    UniverseId = reader.GetInt32("universe_id"),
+                    PositionX = reader.GetInt32("position_x"),
+                    PositionY = reader.GetInt32("position_y"),
+                    StoreLed = new StoreLed(),
+                    Channels = new List<LedChannel>()
+                };
+            }
+            reader.Close();
+            return led;
+        }
     }
 }

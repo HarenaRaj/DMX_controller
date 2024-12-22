@@ -54,6 +54,8 @@ namespace HLight
 
         private List<Led> _leds;
 
+        private List<Group> _groups;
+
         private List<HLedControl> _ledControls = new List<HLedControl>();
 
         private List<HLedControl> _selectedLedControls = new List<HLedControl>();
@@ -64,6 +66,7 @@ namespace HLight
 
         private StoreLedRepository _storeLedRepository;
         private LedRepository _ledRepository;
+        private GroupRepository _groupRepository;
         private Universe _universe;
         private bool _ledIsMove = false;
         public ControlForm()
@@ -72,11 +75,13 @@ namespace HLight
 
             this.KeyPreview = true;
 
-            _universe = UniverseRepository.GetInstance().GetStoreUniverse(1);
+            _universe = UniverseRepository.GetInstance().GetUniverseById(1);
             _ledRepository = LedRepository.GetInstance();
             _storeLedRepository = StoreLedRepository.GetInstance();
             _storeLeds = _storeLedRepository.GetStoreLeds();
             _leds = _ledRepository.GetLedsByUniverseId(_universe.Id);
+            _groupRepository = GroupRepository.GetInstance();
+            _groups = _groupRepository.GetGroups();
 
             _channelControl = new HChannelControl(_ledControls, _selectedLedControls, _groupControls);
             _channelControl.Visible = false;
@@ -96,6 +101,11 @@ namespace HLight
             foreach (var led in _leds)
             {
                 insertLedInUniverseControl(led);
+            }
+
+            foreach (var group in _groups)
+            {
+                insertGroupInGroupPanel(group);
             }
         }
 
@@ -227,12 +237,26 @@ namespace HLight
 
         private void AddGroupButton_Click(object sender, EventArgs e)
         {
+            var group = new Group()
+            {
+                Key = Guid.NewGuid(),
+                Name = "Groupe " + (this._groupControls.Count + 1)
+            };
+
+            insertGroupInGroupPanel(group);
+            this._groupRepository.InsertGroup(group);
+        }
+
+        private void insertGroupInGroupPanel(Group group)
+        {
             var groupPanel = new HGroupControl(_selectedLedControls,
                 this._groupControls,
-                _channelControl.ChannelMasterSpeedBar, 
+                _channelControl.ChannelMasterDimmerBar,
+                _channelControl.ChannelMasterSpeedBar,
                 _channelControl.ChannelFaderBar);
             groupPanel.GroupCommandPanel = this.GroupCommandPanel;
-            groupPanel.NameGroupText.Text = "Groupe " + (this._groupControls.Count + 1);
+            groupPanel.NameGroupText.Text = group.Name;
+            groupPanel.Group = group;
             this._groupControls.Add(groupPanel);
             this.GroupPanel.Controls.Add(groupPanel);
         }
