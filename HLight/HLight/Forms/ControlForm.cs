@@ -6,6 +6,7 @@ using HLight.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -69,9 +70,27 @@ namespace HLight
         private GroupRepository _groupRepository;
         private Universe _universe;
         private bool _ledIsMove = false;
+        private SerialPort _serialPort;
+        private byte[] _dmxData = new byte[5];
         public ControlForm()
         {
             InitializeComponent();
+
+            string[] ports = SerialPort.GetPortNames();
+            foreach (string port in ports)
+            {
+                ComComboBox.Items.Add(port);
+            }
+            if (ports.Length > 0)
+            {
+                ComComboBox.SelectedIndex = 0;
+            }
+
+            _dmxData[0] = 0;
+            for (int i = 1; i < _dmxData.Length; i++)
+            {
+                _dmxData[i] = 0;
+            }
 
             this.KeyPreview = true;
 
@@ -105,7 +124,16 @@ namespace HLight
 
             foreach (var group in _groups)
             {
-                insertGroupInGroupPanel(group);
+                var groupLeds = _groupRepository.GetLedInGroup(group.Key);
+                if (groupLeds.Count > 0)
+                {
+                    var ledControls = _ledControls.Where(x => groupLeds.Any(g => g.Key == x.Led.Key)).ToList();
+                    insertGroupInGroupPanel(ledControls, group);
+                }
+                else
+                {
+                    insertGroupInGroupPanel(_selectedLedControls, group);
+                }
             }
         }
 
@@ -144,7 +172,7 @@ namespace HLight
         {
             var controlCount = this.UniversePanel.Controls.Count;
 
-            var newLedControl = new HLedControl(led);
+            var newLedControl = new HLedControl(led, _channelControl.ChannelMasterDimmerBar);
             newLedControl.Size = new Size(80, 120);
             newLedControl.Cursor = Cursors.Hand;
             newLedControl.Location = new Point(led.PositionX, led.PositionY);
@@ -243,13 +271,14 @@ namespace HLight
                 Name = "Groupe " + (this._groupControls.Count + 1)
             };
 
-            insertGroupInGroupPanel(group);
+            insertGroupInGroupPanel(_selectedLedControls, group);
             this._groupRepository.InsertGroup(group);
         }
 
-        private void insertGroupInGroupPanel(Group group)
+        private void insertGroupInGroupPanel(List<HLedControl> ledControls, Group group)
         {
-            var groupPanel = new HGroupControl(_selectedLedControls,
+            var groupPanel = new HGroupControl(group,
+                ledControls,
                 this._groupControls,
                 _channelControl.ChannelMasterDimmerBar,
                 _channelControl.ChannelMasterSpeedBar,
@@ -299,59 +328,63 @@ namespace HLight
 
         private void ControlForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Space)
-            {
-                PauseAllButton_Click(sender, e);
-            }
             if (e.Control)
             {
                 _ctrlPressed = true;
             }
-            if (_groupControls.Count > 0)
+            else
             {
-                if (e.KeyCode == Keys.D1 && _groupControls.Count > 0) _groupControls[0].SelectGroup(true);
-                if (e.KeyCode == Keys.D2 && _groupControls.Count > 1) _groupControls[1].SelectGroup(true);
-                if (e.KeyCode == Keys.D3 && _groupControls.Count > 2) _groupControls[2].SelectGroup(true);
-                if (e.KeyCode == Keys.D4 && _groupControls.Count > 3) _groupControls[3].SelectGroup(true);
-                if (e.KeyCode == Keys.D5 && _groupControls.Count > 4) _groupControls[4].SelectGroup(true);
-                if (e.KeyCode == Keys.D6 && _groupControls.Count > 5) _groupControls[5].SelectGroup(true);
-                if (e.KeyCode == Keys.D7 && _groupControls.Count > 6) _groupControls[6].SelectGroup(true);
-                if (e.KeyCode == Keys.D8 && _groupControls.Count > 7) _groupControls[7].SelectGroup(true);
-                if (e.KeyCode == Keys.D9 && _groupControls.Count > 8) _groupControls[8].SelectGroup(true);
-                if (e.KeyCode == Keys.D0 && _groupControls.Count > 9) _groupControls[9].SelectGroup(true);
-                var currentSelectedGroup = _groupControls.Where(x => x.IsSelected).FirstOrDefault();
-                if (currentSelectedGroup != null)
+                if (e.KeyCode == Keys.Space)
                 {
-                    var scenePageIndex = currentSelectedGroup.SceneTabControl.SelectedIndex;
-                    if (currentSelectedGroup.Group.ScenePages.Count > 0)
+                    PauseAllButton_Click(sender, e);
+                }
+                if (_groupControls.Count > 0)
+                {
+                    if (e.KeyCode == Keys.D1 && _groupControls.Count > 0) _groupControls[0].SelectGroup(true);
+                    if (e.KeyCode == Keys.D2 && _groupControls.Count > 1) _groupControls[1].SelectGroup(true);
+                    if (e.KeyCode == Keys.D3 && _groupControls.Count > 2) _groupControls[2].SelectGroup(true);
+                    if (e.KeyCode == Keys.D4 && _groupControls.Count > 3) _groupControls[3].SelectGroup(true);
+                    if (e.KeyCode == Keys.D5 && _groupControls.Count > 4) _groupControls[4].SelectGroup(true);
+                    if (e.KeyCode == Keys.D6 && _groupControls.Count > 5) _groupControls[5].SelectGroup(true);
+                    if (e.KeyCode == Keys.D7 && _groupControls.Count > 6) _groupControls[6].SelectGroup(true);
+                    if (e.KeyCode == Keys.D8 && _groupControls.Count > 7) _groupControls[7].SelectGroup(true);
+                    if (e.KeyCode == Keys.D9 && _groupControls.Count > 8) _groupControls[8].SelectGroup(true);
+                    if (e.KeyCode == Keys.D0 && _groupControls.Count > 9) _groupControls[9].SelectGroup(true);
+                    var currentSelectedGroup = _groupControls.Where(x => x.IsSelected).FirstOrDefault();
+                    if (currentSelectedGroup != null)
                     {
-                        var scenePage = currentSelectedGroup.Group.ScenePages[scenePageIndex];
-                        if (e.KeyCode == Keys.A && scenePage.Scenes.Count > 0) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[0]);
-                        if (e.KeyCode == Keys.Z && scenePage.Scenes.Count > 1) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[1]);
-                        if (e.KeyCode == Keys.E && scenePage.Scenes.Count > 2) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[2]);
-                        if (e.KeyCode == Keys.R && scenePage.Scenes.Count > 3) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[3]);
-                        if (e.KeyCode == Keys.T && scenePage.Scenes.Count > 4) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[4]);
-                        if (e.KeyCode == Keys.Y && scenePage.Scenes.Count > 5) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[5]);
-                        if (e.KeyCode == Keys.U && scenePage.Scenes.Count > 6) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[6]);
-                        if (e.KeyCode == Keys.I && scenePage.Scenes.Count > 7) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[7]);
-                        if (e.KeyCode == Keys.O && scenePage.Scenes.Count > 8) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[8]);
-                        if (e.KeyCode == Keys.P && scenePage.Scenes.Count > 9) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[9]);
-                    }
+                        var scenePageIndex = currentSelectedGroup.SceneTabControl.SelectedIndex;
+                        if (currentSelectedGroup.Group.ScenePages.Count > 0)
+                        {
+                            var scenePage = currentSelectedGroup.Group.ScenePages[scenePageIndex];
+                            if (e.KeyCode == Keys.A && scenePage.Scenes.Count > 0) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[0]);
+                            if (e.KeyCode == Keys.Z && scenePage.Scenes.Count > 1) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[1]);
+                            if (e.KeyCode == Keys.E && scenePage.Scenes.Count > 2) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[2]);
+                            if (e.KeyCode == Keys.R && scenePage.Scenes.Count > 3) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[3]);
+                            if (e.KeyCode == Keys.T && scenePage.Scenes.Count > 4) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[4]);
+                            if (e.KeyCode == Keys.Y && scenePage.Scenes.Count > 5) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[5]);
+                            if (e.KeyCode == Keys.U && scenePage.Scenes.Count > 6) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[6]);
+                            if (e.KeyCode == Keys.I && scenePage.Scenes.Count > 7) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[7]);
+                            if (e.KeyCode == Keys.O && scenePage.Scenes.Count > 8) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[8]);
+                            if (e.KeyCode == Keys.P && scenePage.Scenes.Count > 9) currentSelectedGroup.ChangeSceneChannel(scenePage.Scenes[9]);
+                        }
 
-                    if (currentSelectedGroup.Animations.Count > 0)
-                    {
-                        if (e.KeyCode == Keys.Q && currentSelectedGroup.Animations.Count > 0) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[0]);
-                        if (e.KeyCode == Keys.S && currentSelectedGroup.Animations.Count > 1) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[1]);
-                        if (e.KeyCode == Keys.D && currentSelectedGroup.Animations.Count > 2) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[2]);
-                        if (e.KeyCode == Keys.F && currentSelectedGroup.Animations.Count > 3) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[3]);
-                        if (e.KeyCode == Keys.G && currentSelectedGroup.Animations.Count > 4) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[4]);
-                        if (e.KeyCode == Keys.H && currentSelectedGroup.Animations.Count > 5) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[5]);
-                        if (e.KeyCode == Keys.J && currentSelectedGroup.Animations.Count > 6) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[6]);
-                        if (e.KeyCode == Keys.K && currentSelectedGroup.Animations.Count > 7) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[7]);
-                        if (e.KeyCode == Keys.L && currentSelectedGroup.Animations.Count > 8) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[8]);
-                        if (e.KeyCode == Keys.M && currentSelectedGroup.Animations.Count > 9) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[9]);
+                        if (currentSelectedGroup.Animations.Count > 0)
+                        {
+                            if (e.KeyCode == Keys.Q && currentSelectedGroup.Animations.Count > 0) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[0]);
+                            if (e.KeyCode == Keys.S && currentSelectedGroup.Animations.Count > 1) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[1]);
+                            if (e.KeyCode == Keys.D && currentSelectedGroup.Animations.Count > 2) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[2]);
+                            if (e.KeyCode == Keys.F && currentSelectedGroup.Animations.Count > 3) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[3]);
+                            if (e.KeyCode == Keys.G && currentSelectedGroup.Animations.Count > 4) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[4]);
+                            if (e.KeyCode == Keys.H && currentSelectedGroup.Animations.Count > 5) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[5]);
+                            if (e.KeyCode == Keys.J && currentSelectedGroup.Animations.Count > 6) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[6]);
+                            if (e.KeyCode == Keys.K && currentSelectedGroup.Animations.Count > 7) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[7]);
+                            if (e.KeyCode == Keys.L && currentSelectedGroup.Animations.Count > 8) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[8]);
+                            if (e.KeyCode == Keys.M && currentSelectedGroup.Animations.Count > 9) currentSelectedGroup.PlayPauseAnimation(currentSelectedGroup.Animations[9]);
+                        }
                     }
                 }
+
             }
         }
 
@@ -360,6 +393,36 @@ namespace HLight
             if (_ctrlPressed)
             {
                 _ctrlPressed = false;
+            }
+        }
+
+        private void ComButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort == null || !_serialPort.IsOpen)
+            {
+                string portName = ComComboBox.SelectedItem.ToString() ;
+                int baudRate = 250000;
+                _serialPort = new SerialPort(portName, baudRate);
+                _serialPort.Open();
+                ComButton.Text = "Se Déconnecter";
+                MessageBox.Show($"Port \"{portName}\" connecté");
+            }
+            else
+            {
+                _serialPort.Close();
+                TimerSerial.Stop();
+                ComButton.Text = "Se Connecter";
+            }
+
+            TimerSerial.Start();
+        }
+
+        private void TimerSerial_Tick(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                var output = String.Concat(_ledControls.OrderBy(x => x.Led.ChannelBegin).Select(x => x.GetOutputString()).ToList());
+                _serialPort.WriteLine(output);
             }
         }
     }

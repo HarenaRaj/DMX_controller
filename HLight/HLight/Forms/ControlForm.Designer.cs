@@ -45,6 +45,9 @@
             this.PauseLabel = new MetroFramework.Controls.MetroLabel();
             this.PausePicture = new System.Windows.Forms.PictureBox();
             this.AddGroupButton = new MetroFramework.Controls.MetroButton();
+            this.TimerSerial = new System.Windows.Forms.Timer(this.components);
+            this.ComButton = new MetroFramework.Controls.MetroButton();
+            this.ComComboBox = new MetroFramework.Controls.MetroComboBox();
             this.LedContextMenu.SuspendLayout();
             this.MenuStrip.SuspendLayout();
             this.UniversePanel.SuspendLayout();
@@ -222,11 +225,38 @@
             this.AddGroupButton.UseSelectable = true;
             this.AddGroupButton.Click += new System.EventHandler(this.AddGroupButton_Click);
             // 
+            // TimerSerial
+            // 
+            this.TimerSerial.Interval = 25;
+            this.TimerSerial.Tick += new System.EventHandler(this.TimerSerial_Tick);
+            // 
+            // ComButton
+            // 
+            this.ComButton.Location = new System.Drawing.Point(1263, 22);
+            this.ComButton.Name = "ComButton";
+            this.ComButton.Size = new System.Drawing.Size(161, 49);
+            this.ComButton.TabIndex = 6;
+            this.ComButton.Text = "Se Connecter";
+            this.ComButton.UseSelectable = true;
+            this.ComButton.Click += new System.EventHandler(this.ComButton_Click);
+            // 
+            // ComComboBox
+            // 
+            this.ComComboBox.FormattingEnabled = true;
+            this.ComComboBox.ItemHeight = 23;
+            this.ComComboBox.Location = new System.Drawing.Point(1045, 24);
+            this.ComComboBox.Name = "ComComboBox";
+            this.ComComboBox.Size = new System.Drawing.Size(204, 29);
+            this.ComComboBox.TabIndex = 7;
+            this.ComComboBox.UseSelectable = true;
+            // 
             // ControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1879, 1124);
+            this.Controls.Add(this.ComComboBox);
+            this.Controls.Add(this.ComButton);
             this.Controls.Add(this.UniversePanel);
             this.Controls.Add(this.LedPanel);
             this.Controls.Add(this.MenuStrip);
@@ -267,6 +297,9 @@
         private System.Windows.Forms.PictureBox PausePicture;
         private MetroFramework.Controls.MetroPanel PauseAllButton;
         private MetroFramework.Controls.MetroLabel PauseLabel;
+        private System.Windows.Forms.Timer TimerSerial;
+        private MetroFramework.Controls.MetroButton ComButton;
+        private MetroFramework.Controls.MetroComboBox ComComboBox;
     }
 }
 

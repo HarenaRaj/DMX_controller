@@ -43,12 +43,15 @@ namespace HLight.Controls
             Animations = new List<Animation>();
         }
 
-        public HGroupControl(List<HLedControl> selectedLedControls,
+        public HGroupControl(Group group,
+            List<HLedControl> selectedLedControls,
             List<HGroupControl> groupControls,
             HTrackBar channelMasterDimmerBar, 
             HTrackBar channelMasterSpeedBar,
             HTrackBar channelFaderBar) : this()
         {
+            Group = group;
+            group.ScenePages = new List<ScenePage>();
             SelectedLedControls = selectedLedControls;
             _groupControls = groupControls;
             _channelMasterDimmerBar = channelMasterDimmerBar;
@@ -56,6 +59,10 @@ namespace HLight.Controls
             _channelFaderBar = channelFaderBar;
 
             _groupRepository = GroupRepository.GetInstance();
+            foreach (var led in selectedLedControls)
+            {
+                insertLedInLedPanel(led);
+            }
         }
 
         public void ChangeSceneChannel(Scene scene)
@@ -388,6 +395,7 @@ namespace HLight.Controls
 
         private void DeleteLedMenuItem_Click(object sender, EventArgs e)
         {
+            _groupRepository.RemoveLedInGroup(_currentLedLabel.LedControl.Led.Id, Group.Id);
             this.LedPanel.Controls.Remove(_currentLedLabel);
             LedControls.Remove(_currentLedLabel.LedControl);
             Group.Leds.Remove(_currentLedLabel.LedControl.Led);

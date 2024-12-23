@@ -5,6 +5,8 @@ using HLight.Models;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using HLight.Forms;
+using HLight.Controls;
 
 namespace HLight
 {
@@ -12,9 +14,9 @@ namespace HLight
     {
         public Led Led { get; set; }
         public Led OutputLed { get; set; }
-
         public bool IsSelected { get; set; }
 
+        private HTrackBar _dimmerMaster;
         private int _tempR = 0;
         private int _tempG = 0;
         private int _tempB = 0;
@@ -27,7 +29,7 @@ namespace HLight
             TimerFader.Start();
         }
 
-        public HLedControl(Led led) : this() 
+        public HLedControl(Led led, HTrackBar dimmerMaster) : this() 
         {
             this.Led = led;
             this.OutputLed = new Led()
@@ -46,6 +48,7 @@ namespace HLight
                 };
                 this.OutputLed.Channels.Add(newChannel);
             }
+            this._dimmerMaster = dimmerMaster;
             this.LebBox.Image = setImageByType(this.Led.StoreLed.Type);
             this.NameLabel.Text = led.Name;
             ChangeChannel(led.ChannelBegin);
@@ -94,6 +97,22 @@ namespace HLight
             }
 
             ledColorBox.Refresh();
+        }
+
+        public string GetOutputString()
+        {
+            string output = "";
+            foreach (var channel in OutputLed.Channels)
+            {
+                
+                output += channel.Value <= 0 ? "00" : (channel.Value * _dimmerMaster.ChannelTrackBar.Value/ 255).ToString("X2");
+            }
+            for (int i = 0; i < 16 - OutputLed.Channels.Count; i++)
+            {
+                output += "00";
+            }
+
+            return output;
         }
 
         private Image setImageByType(LedType type)

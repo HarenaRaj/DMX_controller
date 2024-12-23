@@ -1,10 +1,8 @@
 ﻿using HLight.Context;
-using HLight.Enums;
 using HLight.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HLight.Repositories
 {
@@ -68,6 +66,7 @@ namespace HLight.Repositories
                 group.Name = reader.GetString("name");
                 group.Key = Guid.Parse(reader.GetString("key"));
                 group.Leds = new List<Led>();
+                group.ScenePages = new List<ScenePage>();
             }
             reader.Close();
             return group;
@@ -135,12 +134,12 @@ namespace HLight.Repositories
                 {
                     try
                     {
-                        var updateLedCommand = new MySqlCommand(@"
+                        var deleteGroupCommand = new MySqlCommand(@"
                             DELETE FROM `group` WHERE `key` = @Key;", connection, transaction);
 
-                        updateLedCommand.Parameters.AddWithValue("@Key", key.ToString());
+                        deleteGroupCommand.Parameters.AddWithValue("@Key", key.ToString());
 
-                        updateLedCommand.ExecuteNonQuery();
+                        deleteGroupCommand.ExecuteNonQuery();
 
                         transaction.Commit();
                     }
@@ -183,7 +182,13 @@ namespace HLight.Repositories
         public List<Led> GetLedInGroup(Guid groupKey)
         {
             var command = new MySqlCommand(@"
-                SELECT * FROM led", _context.Connection);
+                SELECT l.*
+                FROM led l
+                JOIN led_group lg ON l.id = lg.led_id
+                JOIN `group` g ON lg.group_id = g.id
+                WHERE g.key = @GroupKey;", _context.Connection);
+
+            command.Parameters.AddWithValue("@GroupKey", groupKey);
 
             var reader = command.ExecuteReader();
             var leds = new List<Led>();
@@ -200,6 +205,34 @@ namespace HLight.Repositories
             }
             reader.Close();
             return leds;
+        }
+
+        public void RemoveLedInGroup(int ledId, int groupId)
+        {
+            using (var connection = _context.Connection)
+            {
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        var removeLedCommand = new MySqlCommand(@"
+                            DELETE FROM led_group
+                            WHERE led_id = @LedId AND group_id = @GroupId;", connection, transaction);
+
+                        removeLedCommand.Parameters.AddWithValue("@LedId", ledId);
+                        removeLedCommand.Parameters.AddWithValue("@GroupId", groupId);
+
+                        removeLedCommand.ExecuteNonQuery();
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
     }
 }
